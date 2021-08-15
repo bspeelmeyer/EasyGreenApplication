@@ -23,4 +23,5 @@ Easy Green is adopting a mono-repo approach to development. There will be a 'bac
 #### TODO
 
 - Configure **reviews** to be required before PRs are able to be merged.
+- Add your email if you want to be notified of pushes!
 
