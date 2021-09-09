@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/logo.svg')"
+              :src="require('@/assets/images/logos/easygreenlogo.svg')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -18,7 +18,7 @@
             ></v-img>
 
             <h2 class="text-2xl font-weight-semibold">
-              Materio
+              EasyGreen
             </h2>
           </router-link>
         </v-card-title>
@@ -26,7 +26,7 @@
         <!-- title -->
         <v-card-text>
           <p class="text-2xl font-weight-semibold text--primary mb-2">
-            Welcome to Materio! 👋🏻
+            Welcome to EasyGreen! 👋🏻
           </p>
           <p class="mb-2">
             Please sign-in to your account and start the adventure
@@ -35,7 +35,10 @@
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
+          <v-form
+            ref="form"
+            v-model="valid"
+          >
             <v-text-field
               v-model="email"
               outlined
@@ -43,6 +46,7 @@
               placeholder="john@example.com"
               hide-details
               class="mb-3"
+              rules="rules"
             ></v-text-field>
 
             <v-text-field
@@ -50,15 +54,23 @@
               outlined
               :type="isPasswordVisible ? 'text' : 'password'"
               label="Password"
-              placeholder="············"
+              placeholder="**********"
               :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
               hide-details
+              rules="rules"
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
 
             <div class="d-flex align-center justify-space-between flex-wrap">
               <v-checkbox
                 label="Remember Me"
+                hide-details
+                class="me-3 mt-1"
+              >
+              </v-checkbox>
+
+              <v-checkbox
+                label="Admin"
                 hide-details
                 class="me-3 mt-1"
               >
@@ -77,6 +89,7 @@
               block
               color="primary"
               class="mt-6"
+              @click="handleSubmit"
             >
               Login
             </v-btn>
@@ -145,6 +158,7 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import { mapActions } from 'vuex'
 
 export default {
   setup() {
@@ -179,12 +193,42 @@ export default {
       email,
       password,
       socialLink,
+      valid: true,
 
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
       },
+
+      rules: {
+        email: [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+/.test(v) || 'E-mail must be valid',
+        ],
+        password: [
+          v => !!v || 'Password is required',
+        ],
+      },
     }
+  },
+
+  methods: {
+    name: 'Login',
+    handleSubmit() {
+      const params = new URLSearchParams()
+      params.append('email', this.form.email)
+      params.append('password', this.form.password)
+      this.axios.post('/pages/login', params)
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$router.push('/dashboard')
+          }
+        })
+        .catch(res => {
+          console.log(res.data.message)
+        })
+    },
+    ...mapActions(['LoginIn']),
   },
 }
 </script>

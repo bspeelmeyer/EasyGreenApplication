@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/logo.svg')"
+              :src="require('@/assets/images/logos/easygreenlogo.svg')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -18,7 +18,7 @@
             ></v-img>
 
             <h2 class="text-2xl font-weight-semibold">
-              Materio
+              EasyGreen
             </h2>
           </router-link>
         </v-card-title>
@@ -35,18 +35,29 @@
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
+          <v-form
+            ref="form"
+          >
             <v-text-field
-              v-model="username"
+              v-model.trim="firstname"
               outlined
-              label="Username"
-              placeholder="JohnDoe"
+              label="First Name"
+              placeholder="John"
               hide-details
               class="mb-3"
             ></v-text-field>
 
             <v-text-field
-              v-model="email"
+              v-model.trim="lastname"
+              outlined
+              label="Last Name"
+              placeholder="Doe"
+              hide-details
+              class="mb-3"
+            ></v-text-field>
+
+            <v-text-field
+              v-model.trim="email"
               outlined
               label="Email"
               placeholder="john@example.com"
@@ -54,26 +65,111 @@
               class="mb-3"
             ></v-text-field>
 
+            <v-select
+              v-model.trim="gender"
+              outlined
+              :items="genders"
+              label="Gender"
+              placeholder="Choose your gender"
+              hide-details
+              single-line
+              class="mb-3"
+            ></v-select>
+
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="dateOfBirth"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+              class="mb-3"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model.trim="dateOfBirth"
+                  label="Date of Birth"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="dateOfBirth"
+                no-title
+                scrollable
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                  text
+                  color="primary"
+                  @click="menu = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  text
+                  color="primary"
+                  @click="$refs.menu.save(dateofbirth)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+
             <v-text-field
-              v-model="password"
+              v-model.trim="address"
+              outlined
+              label="Address"
+              placeholder="Melbourne, VIC, Australia"
+              hide-details
+              class="mb-3"
+            ></v-text-field>
+
+            <v-text-field
+              v-model.trim="username"
+              outlined
+              label="Username"
+              placeholder="JohnDoe"
+              hide-details
+              class="mb-3"
+              :rules="emailRules"
+            ></v-text-field>
+
+            <v-text-field
+              v-model.trim="password"
+              :rules="passwordRules"
               outlined
               :type="isPasswordVisible ? 'text' : 'password'"
               label="Password"
               placeholder="············"
               :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
               hide-details
+              class="mb-3"
+              @click:append="isPasswordVisible = !isPasswordVisible"
+            ></v-text-field>
+
+            <v-text-field
+              v-model.trim="rePassword"
+              :rules="passwordRules"
+              outlined
+              :type="isPasswordVisible ? 'text' : 'password'"
+              label="Confirm Password"
+              placeholder="············"
+              :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
+              hide-details
+              class="mb-3"
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
 
             <v-checkbox
+              v-model="adminCheck"
+              label="Admin"
               hide-details
-              class="mt-1"
+              class="ms-1"
             >
-              <template #label>
-                <div class="d-flex align-center flex-wrap">
-                  <span class="me-2">I agree to</span><a href="javascript:void(0)">privacy policy &amp; terms</a>
-                </div>
-              </template>
             </v-checkbox>
 
             <v-btn
@@ -155,6 +251,12 @@ export default {
     const username = ref('')
     const email = ref('')
     const password = ref('')
+    const firstname = ref('')
+    const lastname = ref('')
+    const gender = ref('')
+    const address = ref('')
+    const rePassword = ref('')
+    const adminCheck = ref(false)
     const socialLink = [
       {
         icon: mdiFacebook,
@@ -177,6 +279,10 @@ export default {
         colorInDark: '#db4437',
       },
     ]
+    const genders = ['Male', 'Female']
+    const dateOfBirth = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+    const passwordHint = 'Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n'
+      + 'out of !, $, *, &, +, ?'
 
     return {
       isPasswordVisible,
@@ -184,13 +290,85 @@ export default {
       email,
       password,
       socialLink,
+      genders,
+      dateOfBirth,
+      gender,
+      firstname,
+      lastname,
+      rePassword,
+      address,
+      adminCheck,
 
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
       },
+
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || passwordHint,
+      ],
+
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
+
+      rules: {
+        'prefer-const': 'off',
+      },
     }
   },
+
+  // methods: {
+  //   save() {
+  //     const isValid = this.$refs.form.validate()
+  //
+  //     if (isValid) {
+  //       const {
+  //         firstname,
+  //         lastname,
+  //         email,
+  //         gender,
+  //         dateOfBirth,
+  //         address,
+  //         username,
+  //         password,
+  //         rePassword,
+  //         adminCheck,
+  //       } = this
+  //
+  //       let param = {
+  //         firstname, lastname, email, gender, dateOfBirth, address, username, password
+  //       }
+  //
+  //       if (password !== rePassword) {
+  //         alert('Check your password')
+  //         return
+  //       }
+  //       else {
+  //         console.log(param)
+  //         if (adminCheck) {
+  //           createAdmin(param).then(res => {
+  //             if (res.code === 200) {
+  //               alert("An admin has been created successfully!")
+  //             }
+  //           })
+  //         }else {
+  //           createUser(param).then(res => {
+  //             if (res.code === 200) {
+  //               alert("You have been successfully registered!")
+  //             }
+  //           }).catch(() => {
+  //             alert("Something is wrong")
+  //             this.dialog = false
+  //           })
+  //         }
+  //       }
+  //     }
+  //     this.$refs.form.resetValidation()
+  //   }
+  // },
 }
 </script>
 
