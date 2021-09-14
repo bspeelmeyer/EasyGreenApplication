@@ -13,6 +13,7 @@ module.exports = {
 
     // recommended by Vetur
     'vue/html-self-closing': 'off',
+    'vue/no-template-shadow': 'off',
 
     // Disable max-len
     'max-len': 'off',

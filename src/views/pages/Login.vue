@@ -39,6 +39,24 @@
             ref="form"
             v-model="valid"
           >
+            <v-alert
+              :value="loginAlert"
+              border="top"
+              dismissible
+              type="success"
+              transition="scale-transition"
+            >
+              Login Successfully!
+            </v-alert>
+            <v-alert
+              :value="validateAlert"
+              border="top"
+              dismissible
+              type="error"
+              transition="scale-transition"
+            >
+              Please enter correct email or password
+            </v-alert>
             <v-text-field
               v-model="email"
               outlined
@@ -46,7 +64,7 @@
               placeholder="john@example.com"
               hide-details
               class="mb-3"
-              rules="rules"
+              :rules="emailRules"
             ></v-text-field>
 
             <v-text-field
@@ -57,7 +75,7 @@
               placeholder="**********"
               :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
               hide-details
-              rules="rules"
+              :rules="passwordRules"
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
 
@@ -159,12 +177,14 @@
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 import { mapActions } from 'vuex'
+import login from '@/api/login'
+import auth from '@/utils/auth'
 
 export default {
+  name: 'Login',
+
   setup() {
     const isPasswordVisible = ref(false)
-    const email = ref('')
-    const password = ref('')
     const socialLink = [
       {
         icon: mdiFacebook,
@@ -190,45 +210,62 @@ export default {
 
     return {
       isPasswordVisible,
-      email,
-      password,
+      email: '',
+      password: '',
       socialLink,
       valid: true,
+      loginAlert: false,
+      validateAlert: false,
 
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
       },
 
-      rules: {
-        email: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
-        ],
-        password: [
-          v => !!v || 'Password is required',
-        ],
-      },
+      passwordRules: [
+        v => !!v || 'Password is required',
+      ],
+
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
     }
   },
 
   methods: {
-    name: 'Login',
-    handleSubmit() {
-      const params = new URLSearchParams()
-      params.append('email', this.form.email)
-      params.append('password', this.form.password)
-      this.axios.post('/pages/login', params)
-        .then(res => {
-          if (res.data.code === 0) {
+    handleSubmit(e) {
+      e.preventDefault()
+
+      // const params = new URLSearchParams()
+      // params.append('email', this.form.email)
+      // params.append('password', this.form.password)
+
+      const {
+        email, password,
+      } = this
+      const params = {
+        email, password,
+      }
+
+      if (!this.$refs.form.validate()) {
+        this.validateAlert = !this.validateAlert
+
+        return
+      }
+      login(params).then(res => {
+        console.log(res)
+        const response = res.data
+        if (res.flag) {
+          this.loginAlert = !this.loginAlert
+          auth.setToken(response.token)
+          setTimeout(() => {
             this.$router.push('/dashboard')
-          }
-        })
-        .catch(res => {
-          console.log(res.data.message)
-        })
+          }, 2000)
+        }
+      })
     },
-    ...mapActions(['LoginIn']),
+    ...mapActions(['Login']),
   },
 }
 </script>
