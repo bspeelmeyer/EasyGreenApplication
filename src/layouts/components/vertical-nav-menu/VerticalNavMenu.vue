@@ -52,11 +52,6 @@
         :icon="icons.mdiFileOutline"
       >
         <nav-menu-link
-          title="Login"
-          :to="{ name: 'pages-login' }"
-          target="_blank"
-        ></nav-menu-link>
-        <nav-menu-link
           title="Register"
           :to="{ name: 'pages-register' }"
           target="_blank"

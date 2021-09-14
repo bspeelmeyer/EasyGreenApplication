@@ -120,8 +120,8 @@ import DashboardCardTotalEarning from './DashboardCardTotalEarning.vue'
 import DashboardWeeklyOverview from './DashboardWeeklyOverview.vue'
 
 export default {
+  name: 'dashboard',
   components: {
-    StatisticsCardVertical,
     DashboardCongratulationJohn,
     DashboardStatisticsCard,
     DashboardCardTotalEarning,

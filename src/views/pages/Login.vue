@@ -55,16 +55,16 @@
               type="error"
               transition="scale-transition"
             >
-              Please enter correct email or password
+              Please enter correct username or password
             </v-alert>
             <v-text-field
-              v-model="email"
+              v-model="username"
               outlined
-              label="Email"
-              placeholder="john@example.com"
+              label="Username"
+              placeholder="johnDoe"
               hide-details
               class="mb-3"
-              :rules="emailRules"
+              :rules="usernameRules"
             ></v-text-field>
 
             <v-text-field
@@ -107,7 +107,7 @@
               block
               color="primary"
               class="mt-6"
-              @click="handleSubmit"
+              @click.native.prevent="handleSubmit"
             >
               Login
             </v-btn>
@@ -177,13 +177,12 @@
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 import { mapActions } from 'vuex'
-import login from '@/api/login'
 import auth from '@/utils/auth'
 
 export default {
   name: 'Login',
 
-  setup() {
+  data() {
     const isPasswordVisible = ref(false)
     const socialLink = [
       {
@@ -210,9 +209,9 @@ export default {
 
     return {
       isPasswordVisible,
-      email: '',
-      password: '',
       socialLink,
+      username: 'user',
+      password: 'user',
       valid: true,
       loginAlert: false,
       validateAlert: false,
@@ -226,26 +225,19 @@ export default {
         v => !!v || 'Password is required',
       ],
 
-      emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+/.test(v) || 'E-mail must be valid',
+      usernameRules: [
+        v => !!v || 'Username is required',
       ],
     }
   },
 
   methods: {
-    handleSubmit(e) {
-      e.preventDefault()
-
-      // const params = new URLSearchParams()
-      // params.append('email', this.form.email)
-      // params.append('password', this.form.password)
-
+    handleSubmit() {
       const {
-        email, password,
+        username, password,
       } = this
       const params = {
-        email, password,
+        username, password,
       }
 
       if (!this.$refs.form.validate()) {
@@ -253,16 +245,14 @@ export default {
 
         return
       }
-      login(params).then(res => {
+      this.$store.dispatch('Login', params).then(res => {
         console.log(res)
         const response = res.data
-        if (res.flag) {
-          this.loginAlert = !this.loginAlert
-          auth.setToken(response.token)
-          setTimeout(() => {
-            this.$router.push('/dashboard')
-          }, 2000)
-        }
+        this.loginAlert = !this.loginAlert
+        auth.setToken(response['token'])
+        setTimeout(() => {
+          this.$router.push('/dashboard')
+        }, 2000)
       })
     },
     ...mapActions(['Login']),

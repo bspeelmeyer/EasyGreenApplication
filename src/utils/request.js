@@ -1,15 +1,15 @@
 import axios from 'axios'
 import { getToken } from './auth'
 
-export const BASE_URL = 'http://localhost:8080'
+export const BASE_URL = 'http://localhost:8088'
 
-// export const BASE_URL = "";
 const headers = { 'content-type': 'application/json' }
 const INSTANCE = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers,
 })
+
 INSTANCE.interceptors.request.use(
   config => {
     const token = getToken()
@@ -29,7 +29,6 @@ INSTANCE.interceptors.request.use(
 function request(url, params, method) {
   return new Promise((resolve, reject) => {
     let data = {}
-    let copyUrl = url
 
     if (method === 'post' || method === 'put') {
       data = { data: params }
@@ -37,8 +36,8 @@ function request(url, params, method) {
     if (method === 'get' || method === 'delete') {
       data = { params }
     }
-    copyUrl = BASE_URL + url
-    INSTANCE({ copyUrl, method, ...data }).then(res => {
+    url = BASE_URL + url
+    INSTANCE({ url, method, ...data }).then(res => {
       console.log(res)
       resolve(res.data)
     }).catch(err => {
