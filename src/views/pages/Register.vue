@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/easygreenlogo.svg')"
+              :src="require('@/assets/images/logos/easygreen.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -90,7 +90,7 @@
                 <v-text-field
                   v-model.trim="dateOfBirth"
                   label="Date of Birth"
-                  prepend-icon="mdi-calendar"
+                  :prepend-inner-icon="icons.mdiCalendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
@@ -242,7 +242,7 @@
 
 <script>
 // eslint-disable-next-line object-curly-newline
-import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
+import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline, mdiCalendar } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 
 export default {
@@ -302,6 +302,7 @@ export default {
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
+        mdiCalendar,
       },
 
       passwordRules: [

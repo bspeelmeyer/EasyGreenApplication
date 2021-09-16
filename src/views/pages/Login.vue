@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/easygreenlogo.svg')"
+              :src="require('@/assets/images/logos/easygreen.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -58,13 +58,13 @@
               Please enter correct username or password
             </v-alert>
             <v-text-field
-              v-model="username"
+              v-model="email"
               outlined
-              label="Username"
-              placeholder="johnDoe"
+              label="Email"
+              placeholder="john@gmail.com"
               hide-details
               class="mb-3"
-              :rules="usernameRules"
+              :rules="emailRules"
             ></v-text-field>
 
             <v-text-field
@@ -82,13 +82,6 @@
             <div class="d-flex align-center justify-space-between flex-wrap">
               <v-checkbox
                 label="Remember Me"
-                hide-details
-                class="me-3 mt-1"
-              >
-              </v-checkbox>
-
-              <v-checkbox
-                label="Admin"
                 hide-details
                 class="me-3 mt-1"
               >
@@ -210,7 +203,7 @@ export default {
     return {
       isPasswordVisible,
       socialLink,
-      username: 'user',
+      email: 'user@user.com',
       password: 'user',
       valid: true,
       loginAlert: false,
@@ -225,8 +218,9 @@ export default {
         v => !!v || 'Password is required',
       ],
 
-      usernameRules: [
-        v => !!v || 'Username is required',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid',
       ],
     }
   },
@@ -234,10 +228,10 @@ export default {
   methods: {
     handleSubmit() {
       const {
-        username, password,
+        email, password,
       } = this
       const params = {
-        username, password,
+        email, password,
       }
 
       if (!this.$refs.form.validate()) {
@@ -249,7 +243,7 @@ export default {
         console.log(res)
         const response = res.data
         this.loginAlert = !this.loginAlert
-        auth.setToken(response['token'])
+        auth.setToken(response.token)
         setTimeout(() => {
           this.$router.push('/dashboard')
         }, 2000)

@@ -1,12 +1,22 @@
-const TOKEN_KEY = 'mxg-msm-token'
-const USER_KEY = 'mxg-msm-user'
+let sto = window.sessionStorage;
+let headers = {};
+
+export function getTokenHeader() {
+  let token = getToken();
+  if (!isTokenNull()) {
+    token = "Bearer " + token;
+    headers = {Authorization: token,};
+  }
+  return headers;
+}
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY)
+  return sto.getItem("token");
 }
 
 function setToken(token) {
-  return localStorage.setItem(TOKEN_KEY, token)
+  let sto = window.sessionStorage;
+  sto.setItem("token", token);
 }
 
 function isTokenNull() {
@@ -14,13 +24,12 @@ function isTokenNull() {
   if (!token) {
     return true
   }
-
   return false
 }
 
 function setTokenNull() {
-  localStorage.removeItem(TOKEN_KEY)
-  localStorage.removeItem(USER_KEY)
+  let sto = window.sessionStorage;
+  sto.removeItem("token");
 }
 
 // function getUser() {

@@ -11,11 +11,11 @@
     <!-- Navigation Header -->
     <div class="vertical-nav-header d-flex items-center ps-6 pe-5 pt-5 pb-2">
       <router-link
-        to="/"
+        to="/dashboard"
         class="d-flex align-center text-decoration-none"
       >
         <v-img
-          :src="require('@/assets/images/logos/easygreenlogo.svg')"
+          :src="require('@/assets/images/logos/easygreen.png')"
           max-height="30px"
           max-width="30px"
           alt="logo"
@@ -51,11 +51,6 @@
         title="Pages"
         :icon="icons.mdiFileOutline"
       >
-        <nav-menu-link
-          title="Register"
-          :to="{ name: 'pages-register' }"
-          target="_blank"
-        ></nav-menu-link>
         <nav-menu-link
           title="Error"
           :to="{ name: 'error-404' }"
