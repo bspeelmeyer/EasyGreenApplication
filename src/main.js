@@ -8,6 +8,7 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
+import('./mock.js')
 
 Vue.config.productionTip = true
 Vue.use(ElementUI)
