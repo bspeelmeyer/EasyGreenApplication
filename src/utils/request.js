@@ -13,10 +13,10 @@ const INSTANCE = axios.create({
 INSTANCE.interceptors.request.use(
   config => {
     const token = getToken()
-    const copyConfig = config
-    copyConfig.headers.authorization = token
-
-    return copyConfig
+    if (token) {
+      config.headers.authorization = token
+    }
+    return config
   }, error => {
     // do something with request error
     console.log(error) // for debug
@@ -25,7 +25,6 @@ INSTANCE.interceptors.request.use(
   },
 )
 
-// "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsaWFuZyIsImV4cCI6MTU4NzIyNDM0NSwiaWF0IjoxNTg3MjE3MTQ1fQ.GvHmecWhnJSQp5pq9ccGLOok1DmYle55u3k7ZcJSvyJJAfb9BZushjvKa6vEdwLQvcmIBpKu0QrINUZIkvD_rQ"
 function request(url, params, method) {
   return new Promise((resolve, reject) => {
     let data = {}

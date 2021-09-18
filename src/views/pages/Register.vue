@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/easygreenlogo.svg')"
+              :src="require('@/assets/images/logos/easygreen.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -37,6 +37,7 @@
         <v-card-text>
           <v-form
             ref="form"
+            v-model="valid"
           >
             <v-text-field
               v-model.trim="firstname"
@@ -63,7 +64,18 @@
               placeholder="john@example.com"
               hide-details
               class="mb-3"
+              :rules="emailRules"
             ></v-text-field>
+
+            <v-text-field
+              v-model.trim="phone"
+              outlined
+              label="Phone"
+              placeholder="123456789"
+              hide-details
+              class="mb-3"
+            ></v-text-field>
+
 
             <v-select
               v-model.trim="gender"
@@ -77,10 +89,8 @@
             ></v-select>
 
             <v-menu
-              ref="menu"
               v-model="menu"
               :close-on-content-click="false"
-              :return-value.sync="dateOfBirth"
               transition="scale-transition"
               offset-y
               min-width="auto"
@@ -88,9 +98,9 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model.trim="dateOfBirth"
+                  v-model="dateOfBirth"
                   label="Date of Birth"
-                  prepend-icon="mdi-calendar"
+                  :prepend-inner-icon="icons.mdiCalendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
@@ -98,24 +108,8 @@
               </template>
               <v-date-picker
                 v-model="dateOfBirth"
-                no-title
-                scrollable
+                @input="menu = false"
               >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="menu = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.menu.save(dateofbirth)"
-                >
-                  OK
-                </v-btn>
               </v-date-picker>
             </v-menu>
 
@@ -135,7 +129,7 @@
               placeholder="JohnDoe"
               hide-details
               class="mb-3"
-              :rules="emailRules"
+              :rules="usernameRules"
             ></v-text-field>
 
             <v-text-field
@@ -164,18 +158,24 @@
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
 
-            <v-checkbox
-              v-model="adminCheck"
-              label="Admin"
+            <v-select
+              v-model="role"
+              :items="roles"
+              :rules="[v => !!v || 'Role is required']"
+              label="Role"
+              required
+              outlined
+              placeholder="Choose your role"
               hide-details
-              class="ms-1"
-            >
-            </v-checkbox>
+              single-line
+              class="mb-3"
+            ></v-select>
 
             <v-btn
               block
               color="primary"
               class="mt-6"
+              @click.native.prevent="create"
             >
               Sign Up
             </v-btn>
@@ -242,21 +242,18 @@
 
 <script>
 // eslint-disable-next-line object-curly-newline
-import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
-import { ref } from '@vue/composition-api'
+import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline, mdiCalendar } from '@mdi/js'
+import { createAdmin, createUser } from "@/api/user";
 
+const passwordHint = 'Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n'
+  + 'out of !, $, *, &, +, ?'
+
+let Mock = require('mockjs')
+let Random = Mock.Random
+let moment = require('moment');
 export default {
+  name: "NewAccount",
   setup() {
-    const isPasswordVisible = ref(false)
-    const username = ref('')
-    const email = ref('')
-    const password = ref('')
-    const firstname = ref('')
-    const lastname = ref('')
-    const gender = ref('')
-    const address = ref('')
-    const rePassword = ref('')
-    const adminCheck = ref(false)
     const socialLink = [
       {
         icon: mdiFacebook,
@@ -279,34 +276,49 @@ export default {
         colorInDark: '#db4437',
       },
     ]
-    const genders = ['Male', 'Female']
-    const dateOfBirth = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
-    const passwordHint = 'Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n'
-      + 'out of !, $, *, &, +, ?'
 
     return {
-      isPasswordVisible,
-      username,
-      email,
-      password,
+      isPasswordVisible: false,
       socialLink,
-      genders,
-      dateOfBirth,
-      gender,
-      firstname,
-      lastname,
-      rePassword,
-      address,
-      adminCheck,
+      username: 'Test',
+      email: Random.email(),
+      phone: '996',
+      password: 'Test123',
+      genders: [{
+        text: 'Male',
+        value: 'Male'
+      }, {
+        text: 'Female',
+        value: 'Female'
+      }, {
+        text: 'Other',
+        value: 'Other'
+      }],
+      dateOfBirth: moment().format("YYYY-MM-DD"),
+      menu: false,
+      gender: 'Male',
+      firstname: Random.name(),
+      lastname: Random.name(),
+      rePassword: 'Test123',
+      address: 'an address',
+      roles: [{
+        text: "User",
+        value: "user"
+      }, {
+        text: "Admin",
+        value: "admin"
+      }],
+      role: 'admin',
+      valid: true,
 
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
+        mdiCalendar,
       },
 
       passwordRules: [
         v => !!v || 'Password is required',
-        v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || passwordHint,
       ],
 
       emailRules: [
@@ -314,61 +326,71 @@ export default {
         v => /.+@.+/.test(v) || 'E-mail must be valid',
       ],
 
-      rules: {
-        'prefer-const': 'off',
-      },
+      usernameRules: [
+        v => !!v || 'Username is required',
+      ]
     }
   },
 
-  // methods: {
-  //   save() {
-  //     const isValid = this.$refs.form.validate()
-  //
-  //     if (isValid) {
-  //       const {
-  //         firstname,
-  //         lastname,
-  //         email,
-  //         gender,
-  //         dateOfBirth,
-  //         address,
-  //         username,
-  //         password,
-  //         rePassword,
-  //         adminCheck,
-  //       } = this
-  //
-  //       let param = {
-  //         firstname, lastname, email, gender, dateOfBirth, address, username, password
-  //       }
-  //
-  //       if (password !== rePassword) {
-  //         alert('Check your password')
-  //         return
-  //       }
-  //       else {
-  //         console.log(param)
-  //         if (adminCheck) {
-  //           createAdmin(param).then(res => {
-  //             if (res.code === 200) {
-  //               alert("An admin has been created successfully!")
-  //             }
-  //           })
-  //         }else {
-  //           createUser(param).then(res => {
-  //             if (res.code === 200) {
-  //               alert("You have been successfully registered!")
-  //             }
-  //           }).catch(() => {
-  //             alert("Something is wrong")
-  //             this.dialog = false
-  //           })
-  //         }
-  //       }
-  //     }
-  //     this.$refs.form.resetValidation()
-  //   }
-  // },
+  methods: {
+    create() {
+      const isValid = this.$refs.form.validate()
+
+      if (isValid) {
+        const {
+          firstname,
+          lastname,
+          email,
+          phone,
+          gender,
+          dateOfBirth,
+          address,
+          username,
+          password,
+          rePassword,
+          role
+        } = this
+
+        let param = {
+          username, email, password, phone
+        }
+
+        if (password !== rePassword) {
+          alert('Check your password')
+          return
+        }
+        if (role === 'admin') {
+          console.log(param)
+          createAdmin(param).then(res => {
+            if (res.code === 200) {
+              alert('An admin has been created successfully!')
+            }
+            window.location.reload()
+          })
+        } else if (role === 'user') {
+          const dobTime = moment(dateOfBirth).valueOf()
+          param['firstname'] = firstname
+          param['lastname'] = lastname
+          param['gender'] = gender
+          param['dateOfBirth'] = dobTime
+          param['address'] = address
+          console.log(param)
+          createUser(param).then(res => {
+            if (res.code === 200) {
+              alert('A user has been created successfully!')
+            }
+            window.location.reload()
+          }).catch(() => {
+            alert('Something is wrong')
+          })
+        } else {
+          alert('Please select a role')
+          return
+        }
+      }
+      this.$refs.form.resetValidation()
+    }
+  },
 }
 </script>
 
