@@ -52,9 +52,8 @@
         :icon="icons.mdiFileOutline"
       >
         <nav-menu-link
-          title="Error"
-          :to="{ name: 'error-404' }"
-          target="_blank"
+          title="Admin Dashboard"
+          href="/admin-dashboard"
         ></nav-menu-link>
       </nav-menu-group>
       <nav-menu-section-title title="USER INTERFACE"></nav-menu-section-title>
