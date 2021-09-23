@@ -245,7 +245,7 @@ export default {
         this.loginAlert = !this.loginAlert
         auth.setToken(response.token)
         setTimeout(() => {
-          this.$router.push('/dashboard')
+          this.$router.replace('/dashboard')
         }, 2000)
       })
     },
