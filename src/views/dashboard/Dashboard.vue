@@ -21,6 +21,12 @@
       cols="12"
       md="80"
     >
+      <dashboard-congratulation-john></dashboard-congratulation-john>
+    </v-col>
+    <v-col
+      cols="12"
+      md="80"
+    >
       <UserPlantsTable></UserPlantsTable>
     </v-col>
 
@@ -34,11 +40,13 @@ import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardV
 
 // demos
 import UserPlantsTable from "@/views/simple-table/UserPlantsTable";
+import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
 
 export default {
   name: 'dashboard',
   components: {
     UserPlantsTable,
+    DashboardCongratulationJohn,
   },
   setup() {
 

@@ -5,7 +5,7 @@
         :headers="headers"
         :items="plantsData"
         :items-per-page="20"
-        class="elevation-1"
+        class="text-center text-uppercase"
       >
         <template v-slot:item.actions="{ item }">
           <v-icon
@@ -13,13 +13,13 @@
             class="mr-2"
             @click="editItem(item)"
           >
-            mdi-pencil
+            {{ icons.mdiPencil }}
           </v-icon>
           <v-icon
             small
             @click="deleteItem(item)"
           >
-            mdi-delete
+            {{ icons.mdiDelete }}
           </v-icon>
         </template>
       </v-data-table>
@@ -29,12 +29,12 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDataByUserId } from "@/api/data";
-import { getPlant } from "@/api/plant";
+import { getDataListByUserId } from "@/api/data";
+import { mdiDelete, mdiPencil} from '@mdi/js';
 
 const headers = [
   {
-    text: 'Plant', value: 'plantId'
+    text: 'Plant', value: 'plantName'
   },
   {
     text: 'Garden Light', value: 'lightIntensity'
@@ -60,19 +60,10 @@ export default {
   },
 
   async mounted() {
-    let plantsData = []
-    await getDataByUserId(this.id).then((resp) => {
+    await getDataListByUserId(this.id).then((resp) => {
       const data = resp.data
       console.log(data)
-      const labels = ['lightIntensity', 'humidity', 'soilMoisture', 'temperature']
-      for (const plantData of data) {
-        let obj = {}
-        for (const key of labels) {
-          obj[key] = plantData[key]
-        }
-        obj['_id'] = plantData['plantId']
-        plantsData.push(obj)
-      }
+      this.plantsData = data
     })
   },
 
@@ -80,6 +71,10 @@ export default {
     return {
       headers,
       plantsData: [],
+      icons: {
+        mdiPencil,
+        mdiDelete,
+      },
     }
   },
 
