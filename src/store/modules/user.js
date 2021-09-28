@@ -1,19 +1,35 @@
 import login from '@/api/login'
+import auth from "@/utils/auth";
 
 // import { getToken, setToken, setUser, getUser, setTokenNull } from '@/utils/auth'
 
 const user = {
   state: {
-    token: null,
-    user: null,
+    id: 0,
+    name: '',
+    email: '',
+    token: '',
+    role: '',
   },
 
   mutations: {
+    SET_NAME: (state, name) => {
+      state.name = name
+    },
+    SET_ROLE: (state, role) => {
+      state.role = role
+    },
+    SET_EMAIL: (state, email) => {
+      state.email = email
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_USER: (a, res) => {
-      Object.assign(a, res)
+    SET_USER: (state, user) => {
+      Object.assign(state, user)
+    },
+    LOGOUT: (state) => {
+      Object.assign(state, {})
     },
   },
 
@@ -31,6 +47,14 @@ const user = {
         })
       })
     },
+
+    Logout({ commit }) {
+      return new Promise((resolve) => {
+        auth.logout()
+        commit('LOGOUT')
+        resolve()
+      })
+    }
   },
 
 }

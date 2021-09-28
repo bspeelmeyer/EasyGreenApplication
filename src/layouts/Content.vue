@@ -28,7 +28,7 @@
 
           <!-- Right Content -->
           <a
-            href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+            href="https://github.com/EasyGreenDevelopment/EasyGreenApplication"
             target="_blank"
             rel="nofollow"
           >
@@ -72,23 +72,13 @@
               href="https://themeselection.com"
               class="text-decoration-none"
               target="_blank"
-            >ThemeSelection</a></span>
+            >EasyGreen</a></span>
           <span class="d-sm-inline d-none">
             <a
-              href="https://themeselection.com/products/category/download-free-admin-templates/"
-              target="_blank"
-              class="me-6 text--secondary text-decoration-none"
-            >Freebies</a>
-            <a
-              href="https://themeselection.com/blog/"
-              target="_blank"
-              class="me-6 text--secondary text-decoration-none"
-            >Blog</a>
-            <a
-              href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free/blob/main/LICENSE"
+              href="#"
               target="_blank"
               class="text--secondary text-decoration-none"
-            >MIT Licence</a>
+            >About Us</a>
           </span>
         </div>
       </div>

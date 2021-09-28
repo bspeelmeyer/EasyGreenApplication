@@ -6,19 +6,19 @@
           Congratulations John! 🥳
         </v-card-title>
         <v-card-subtitle class="text-no-wrap ps-2">
-          You have won Trophy
+          You plants health is trending up!!
         </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">
-              $42.8k
+              86.9%
             </p>
 
             <v-btn
               small
               color="primary"
             >
-              View Sales
+              View History
             </v-btn>
           </div>
         </v-card-text>

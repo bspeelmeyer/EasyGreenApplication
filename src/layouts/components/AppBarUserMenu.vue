@@ -45,16 +45,18 @@
           style="vertical-align:middle"
         >
           <span class="text--primary font-weight-semibold mb-n1">
-            John Doe
+            {{ userName }}
           </span>
-          <small class="text--disabled text-capitalize">Admin</small>
+          <small class="text--disabled text-capitalize">{{ loginRole }}</small>
         </div>
       </div>
 
       <v-divider></v-divider>
 
       <!-- Profile -->
-      <v-list-item link>
+      <v-list-item link
+                   @click="redirectToProfile"
+      >
         <v-list-item-icon class="me-2">
           <v-icon size="22">
             {{ icons.mdiAccountOutline }}
@@ -77,27 +79,6 @@
         </v-list-item-content>
       </v-list-item>
 
-      <!-- Chat -->
-      <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiChatOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Chat</v-list-item-title>
-        </v-list-item-content>
-
-        <v-list-item-action>
-          <v-badge
-            inline
-            color="error"
-            content="2"
-          >
-          </v-badge>
-        </v-list-item-action>
-      </v-list-item>
-
       <v-divider class="my-2"></v-divider>
 
       <!-- Settings -->
@@ -112,34 +93,12 @@
         </v-list-item-content>
       </v-list-item>
 
-      <!-- Pricing -->
-      <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiCurrencyUsd }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Pricing</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <!-- FAQ -->
-      <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiHelpCircleOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>FAQ</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
       <v-divider class="my-2"></v-divider>
 
       <!-- Logout -->
-      <v-list-item link>
+      <v-list-item link
+                   @click="logOut"
+      >
         <v-list-item-icon class="me-2">
           <v-icon size="22">
             {{ icons.mdiLogoutVariant }}
@@ -164,8 +123,22 @@ import {
   mdiHelpCircleOutline,
   mdiLogoutVariant,
 } from '@mdi/js'
+import { mapActions, mapState } from 'vuex';
+import { getAdminInfo, getUserInfo } from "@/api/user";
 
 export default {
+  name: 'UserReflection',
+  mounted() {
+    this.initUser();
+  },
+
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+      role: state => state.user.role,
+    }),
+  },
+
   setup() {
     return {
       icons: {
@@ -178,8 +151,56 @@ export default {
         mdiHelpCircleOutline,
         mdiLogoutVariant,
       },
+
+      userName: '',
+      loginRole: '',
     }
   },
+
+  methods: {
+    initUser() {
+      console.log(this.id)
+      console.log(this.role)
+      if (this.role === 'USER') {
+        getUserInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.userName = data.userName;
+            this.loginRole = this.role;
+            this.data = Object.assign({}, this.data);
+          }
+        })
+      } else {
+        getAdminInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.userName = data.name;
+            this.loginRole = this.role;
+            this.data = Object.assign({}, this.data);
+          }
+        })
+      }
+
+    },
+
+    redirectToProfile() {
+      this.$router.push('/pages/account-settings')
+    },
+
+    ...mapActions(['Logout']),
+    logOut() {
+      this.$confirm(
+        'Are you sure you want to log out?',
+        'Logout?', {
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+      }).then(() => {
+        this.Logout()
+        this.$router.replace('/pages/login')
+      })
+    }
+  }
 }
 </script>
 
