@@ -20,6 +20,7 @@
                 label="Current Password"
                 outlined
                 dense
+                :rules="rules.password"
                 @click:append="isCurrentPasswordVisible = !isCurrentPasswordVisible"
               ></v-text-field>
 
@@ -31,6 +32,7 @@
                 label="New Password"
                 outlined
                 dense
+                :rules="rules.password"
                 hint="Make sure it's at least 8 characters."
                 persistent-hint
                 @click:append="isNewPasswordVisible = !isNewPasswordVisible"
@@ -44,6 +46,7 @@
                 label="Confirm New Password"
                 outlined
                 dense
+                :rules="rules.password"
                 class="mt-3"
                 @click:append="isCPasswordVisible = !isCPasswordVisible"
               ></v-text-field>
@@ -70,35 +73,35 @@
       <v-divider></v-divider>
 
       <div class="pa-3">
-        <v-card-title class="flex-nowrap">
-          <v-icon class="text--primary me-3">
-            {{ icons.mdiKeyOutline }}
-          </v-icon>
-          <span class="text-break">Two-factor authentication</span>
-        </v-card-title>
+<!--        <v-card-title class="flex-nowrap">-->
+<!--          <v-icon class="text&#45;&#45;primary me-3">-->
+<!--            {{ icons.mdiKeyOutline }}-->
+<!--          </v-icon>-->
+<!--          <span class="text-break">Two-factor authentication</span>-->
+<!--        </v-card-title>-->
 
-        <v-card-text class="two-factor-auth text-center mx-auto">
-          <v-avatar
-            color="primary"
-            class="primary mb-4"
-            rounded
-          >
-            <v-icon
-              size="25"
-              color="white"
-            >
-              {{ icons.mdiLockOpenOutline }}
-            </v-icon>
-          </v-avatar>
-          <p class="text-base text--primary font-weight-semibold">
-            Two factor authentication is not enabled yet.
-          </p>
-          <p class="text-sm text--primary">
-            Two-factor authentication adds an additional layer of
-            security to your account by requiring more than just a
-            password to log in. Learn more.
-          </p>
-        </v-card-text>
+<!--        <v-card-text class="two-factor-auth text-center mx-auto">-->
+<!--          <v-avatar-->
+<!--            color="primary"-->
+<!--            class="primary mb-4"-->
+<!--            rounded-->
+<!--          >-->
+<!--            <v-icon-->
+<!--              size="25"-->
+<!--              color="white"-->
+<!--            >-->
+<!--              {{ icons.mdiLockOpenOutline }}-->
+<!--            </v-icon>-->
+<!--          </v-avatar>-->
+<!--          <p class="text-base text&#45;&#45;primary font-weight-semibold">-->
+<!--            Two factor authentication is not enabled yet.-->
+<!--          </p>-->
+<!--          <p class="text-sm text&#45;&#45;primary">-->
+<!--            Two-factor authentication adds an additional layer of-->
+<!--            security to your account by requiring more than just a-->
+<!--            password to log in. Learn more.-->
+<!--          </p>-->
+<!--        </v-card-text>-->
 
         <!-- action buttons -->
         <v-card-text>
@@ -125,8 +128,22 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import {getUserInfo} from "@/api/user";
+import {mapState} from "vuex";
+
+const passwordHint = "Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n" +
+  "out of !, $, *, &, +, ?"
 
 export default {
+  name: 'AccountPassword',
+
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+      role: state => state.user.role,
+    }),
+  },
+
   setup() {
     const isCurrentPasswordVisible = ref(false)
     const isNewPasswordVisible = ref(false)
@@ -148,6 +165,41 @@ export default {
         mdiEyeOffOutline,
         mdiEyeOutline,
       },
+      rules: {
+        password: [
+          v => !!v || 'Password is required',
+          v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || 'Password must be valid. ' + passwordHint,
+        ],
+      }
+    }
+  },
+
+  methods: {
+    updatePassword() {
+      getUserInfo(this.id).then(resp => {
+        const data = resp.data;
+        if (this.currentPassword !== data.password) {
+          this.$alert(`Current password is not correct${this.currentPassword}.${data.password}`)
+          return
+        }
+        if (this.newPassword !== this.cPassword) {
+          this.$alert("New password is not same as confirm password.")
+          return
+        }
+        const param = {
+          id: this.id,
+          password: this.newPassword
+        }
+        if (this.role.toLowerCase() === 'user') {
+          // update user password
+        } else {
+          // update admin password
+        }
+      })
+    },
+
+    redirectToAccount() {
+      this.$router.push('/pages/account-settings')
     }
   },
 }
