@@ -68,16 +68,16 @@
       <div class="boxed-container w-full">
         <div class="mx-6 d-flex justify-space-between">
           <span>
-            &copy; 2021 <a
+            <a
               href="https://themeselection.com"
               class="text-decoration-none"
               target="_blank"
-            >EasyGreen</a></span>
+            >EasyGreen </a>&copy; 2021</span>
           <span class="d-sm-inline d-none">
             <a
-              href="#"
               target="_blank"
               class="text--secondary text-decoration-none"
+              @click="redirectToAbout"
             >About Us</a>
           </span>
         </div>
@@ -113,6 +113,12 @@ export default {
       },
     }
   },
+
+  methods: {
+    redirectToAbout() {
+      this.$router.push('/about-us')
+    }
+  }
 }
 </script>
 
