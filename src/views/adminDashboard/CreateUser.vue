@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span class="font-weight-semi-bold">Edit User</span>
+      <span class="font-weight-semi-bold">Create User</span>
     </v-card-title>
     <v-card-text>
       <v-form>
@@ -45,10 +45,10 @@
         ></v-text-field>
 
         <v-btn color="primary">
-          Confirm Edit
+          Create
         </v-btn>
         <v-btn
-          href="organization-board"
+          href="admin-dashboard"
           outlined
           class="mx-2"
         >

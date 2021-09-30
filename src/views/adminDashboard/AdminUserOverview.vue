@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span class="font-weight-semi-bold">Organizations</span>
+      <span class="font-weight-semi-bold">Users</span>
     </v-card-title>
     <v-card-text>
       <v-simple-table
@@ -12,16 +12,19 @@
           <thead>
             <tr>
               <th class="text-uppercase">
+                Id
+              </th>
+              <th class="text-center text-uppercase">
                 Name
               </th>
               <th class="text-center text-uppercase">
-                Users
+                Plants Assiged
               </th>
               <th class="text-center text-uppercase">
-                Plants
+                Organization
               </th>
               <th class="text-center text-uppercase">
-                View
+                Manage
               </th>
             </tr>
           </thead>
@@ -30,17 +33,20 @@
               v-for="item in orgs"
               :key="item.org"
             >
-              <td>{{ item.name }}</td>
+              <td>{{ item.id }}</td>
               <td class="text-center">
-                {{ item.users }}
+                {{ item.name }}
               </td>
               <td class="text-center">
                 {{ item.plants }}
               </td>
               <td class="text-center">
+                {{ item.organization }}
+              </td>
+              <td class="text-center">
                 <v-btn
                   color="primary"
-                  href="/organization-board"
+                  href="/edit-user"
                 >
                   Manage
                 </v-btn>
@@ -57,44 +63,28 @@ export default {
   setup() {
     const orgs = [
       {
-        name: 'Acme Narre Warren',
-        users: 4,
-        plants: 14,
+        id: 1,
+        name: 'David Jones',
+        plants: 2,
+        organization: 'Acme Narre Warren',
       },
       {
-        name: 'Acme Berwick',
-        users: 2,
-        plants: 20,
+        id: 15,
+        name: 'Sarah Marshall',
+        plants: 5,
+        organization: 'Acme Berwick',
       },
       {
-        name: 'Acme Melbourne',
-        users: 35,
-        plants: 152,
+        id: 18,
+        name: 'Mike Taylor',
+        plants: 6,
+        organization: 'Acme Melbourne',
       },
       {
-        name: 'Acme Richmond',
-        users: 15,
-        plants: 86,
-      },
-      {
-        name: 'Acme Geelong',
-        users: 1,
-        plants: 86,
-      },
-      {
-        name: 'Acme Morwell',
-        users: 1,
-        plants: 10,
-      },
-      {
-        name: 'Acme Geelong',
-        users: 1,
-        plants: 86,
-      },
-      {
-        name: 'Acme Shepperton',
-        users: 16,
-        plants: 28,
+        id: 21,
+        name: 'Steve Jobs',
+        plants: 5,
+        organization: 'Acme Richmond',
       },
     ]
 
