@@ -1,52 +1,66 @@
 <template>
-    <v-card>
-        <v-card-title class="align-start">
-            <span class="font-weight-semi-bold">Organization Users</span>
-        </v-card-title>
-        <v-card-text>
-             <v-simple-table
-            height="300"
-            fixed-header
-        >
-            <template v-slot:default>
-            <thead>
-                <tr>
-                    <th class="text-uppercase">
-                        Id
-                    </th>
-                    <th class="text-center text-uppercase">
-                        Name
-                    </th>
-                    <th class="text-center text-uppercase">
-                        Plants assigned
-                    </th>
-                    <th class="text-center text-uppercase">
-                        Edit
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                v-for="item in orgs"
-                :key="item.org"
+  <v-card>
+    <v-card-title class="align-start">
+      <span class="font-weight-semi-bold">Organization Users</span>
+    </v-card-title>
+    <v-card-text>
+      <v-simple-table
+        height="300"
+        fixed-header
+      >
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-uppercase">
+                Id
+              </th>
+              <th class="text-center text-uppercase">
+                Name
+              </th>
+              <th class="text-center text-uppercase">
+                Plants assigned
+              </th>
+              <th class="text-center text-uppercase">
+                Edit
+              </th>
+               <th class="text-center text-uppercase">
+                Unassign
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item in orgs"
+              :key="item.org"
+            >
+              <td>{{ item.id }}</td>
+              <td class="text-center">
+                {{ item.name }}
+              </td>
+              <td class="text-center">
+                {{ item.plants }}
+              </td>
+              <td class="text-center">
+                <v-btn
+                  color="primary"
+                  href="/edit-user"
                 >
-                    <td>{{ item.id }}</td>
-                    <td class="text-center">
-                        {{ item.name }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.plants }}
-                    </td>
-                    <td class="text-center">
-                        <v-btn href="/edit-user">Edit</v-btn>
-                    </td>
-                </tr>
-            </tbody>
-            </template>
-            </v-simple-table>
-        </v-card-text>
-       
-    </v-card>
+                  Edit
+                </v-btn>
+              </td>
+               <td class="text-center">
+                <v-btn
+                  color="primary"
+                >
+                  Unassign
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-card-text>
+  </v-card>
 </template>
 <script>
 export default {
@@ -72,7 +86,7 @@ export default {
         name: 'Steve Jobs',
         plants: 5,
       },
-      
+
     ]
 
     return {
