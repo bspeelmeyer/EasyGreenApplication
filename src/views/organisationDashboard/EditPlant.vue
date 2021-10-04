@@ -7,7 +7,7 @@
       <v-form>
         <v-text-field
           v-model="Id"
-          label="First Name"
+          label="Plant ID"
           outlined
           dense
           disabled
