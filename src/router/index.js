@@ -76,6 +76,41 @@ const routes = [
     path: '*',
     redirect: 'error-404',
   },
+  {
+    path: '/admin-dashboard',
+    name: 'admin-dashboard',
+    component: () => import('@/views/adminDashboard/AdminDashboard.vue'),
+  },
+  {
+    path: '/organization-board',
+    name: 'organization-board',
+    component: () => import('@/views/organisationDashboard/Organizationboard.vue'),
+  },
+  {
+    path: '/edit-user',
+    name: 'edit-user',
+    component: () => import('@/views/organisationDashboard/Edituser.vue'),
+  },
+  {
+    path: '/edit-plant',
+    name: 'edit-plant',
+    component: () => import('@/views/organisationDashboard/EditPlant.vue'),
+  },
+  {
+    path: '/create-user',
+    name: 'create-user',
+    component: () => import('@/views/adminDashboard/CreateUser.vue'),
+  },
+  {
+    path: '/create-plant',
+    name: 'create-plant',
+    component: () => import('@/views/adminDashboard/CreatePlant.vue'),
+  },
+  {
+    path: '/create-organization',
+    name: 'create-organization',
+    component: () => import('@/views/adminDashboard/CreateOrg.vue'),
+  },
 ]
 
 const router = new VueRouter({
