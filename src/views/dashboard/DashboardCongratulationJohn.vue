@@ -3,35 +3,21 @@
     <v-row class="ma-0 pa-0">
       <v-col cols="8">
         <v-card-title class="text-no-wrap pt-1 ps-2">
-          Congratulations John! 🥳
+          Congratulations {{ userName }} 🥳
         </v-card-title>
         <v-card-subtitle class="text-no-wrap ps-2">
-          You plants health is trending up!!
+          You overall plants health is trending up!!
         </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">
-              86.9%
+              86.9% ↑
             </p>
-
-            <v-btn
-              small
-              color="primary"
-            >
-              View History
-            </v-btn>
           </div>
         </v-card-text>
       </v-col>
 
       <v-col cols="4">
-        <v-img
-          contain
-          height="180"
-          width="159"
-          :src="require(`@/assets/images/misc/triangle-${$vuetify.theme.dark ? 'dark':'light'}.png`)"
-          class="greeting-card-bg"
-        ></v-img>
         <v-img
           contain
           height="108"
@@ -44,6 +30,43 @@
   </v-card>
 </template>
 
+<script>
+import { mapState } from 'vuex';
+import { getUserInfo } from "@/api/user";
+
+export default {
+  name: 'PlantStatus',
+
+  data() {
+    return {
+      userName: '',
+    }
+  },
+
+  mounted() {
+    this.initUserName()
+  },
+
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+    }),
+  },
+
+  methods: {
+    initUserName() {
+      console.log(this.id)
+      getUserInfo(this.id).then(resp => {
+        const data = resp.data;
+        if (data) {
+          this.userName = data.userName.toUpperCase();
+        }
+      })
+    }
+  }
+}
+
+</script>
 <style lang="scss" scoped>
 .greeting-card {
   position: relative;
