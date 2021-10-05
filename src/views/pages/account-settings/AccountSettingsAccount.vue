@@ -9,7 +9,7 @@
         size="120"
         class="me-6"
       >
-        <v-img :src="accountDataLocale.avatarImg"></v-img>
+        <v-img src="@/assets/images/avatars/1.png"></v-img>
       </v-avatar>
 
       <!-- upload photo -->
@@ -36,11 +36,12 @@
           color="error"
           outlined
           class="mt-5"
+          @click="initUserInfo"
         >
           Reset
         </v-btn>
         <p class="text-sm mt-5">
-          Allowed JPG, GIF or PNG. Max size of 800K
+          Upload new photo is not implemented yet*
         </p>
       </div>
     </v-card-text>
@@ -53,7 +54,7 @@
             cols="12"
           >
             <v-text-field
-              v-model="accountDataLocale.username"
+              v-model="accountDataLocale.userName"
               label="Username"
               dense
               outlined
@@ -65,8 +66,20 @@
             cols="12"
           >
             <v-text-field
-              v-model="accountDataLocale.name"
-              label="Name"
+              v-model="accountDataLocale.firstName"
+              label="First Name"
+              dense
+              outlined
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            md="6"
+            cols="12"
+          >
+            <v-text-field
+              v-model="accountDataLocale.lastName"
+              label="Last Name"
               dense
               outlined
             ></v-text-field>
@@ -81,18 +94,7 @@
               label="E-mail"
               dense
               outlined
-            ></v-text-field>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.role"
-              dense
-              label="Role"
-              outlined
+              :rules="rules.email"
             ></v-text-field>
           </v-col>
 
@@ -101,11 +103,11 @@
             md="6"
           >
             <v-select
-              v-model="accountDataLocale.status"
+              v-model="accountDataLocale.gender"
               dense
               outlined
-              label="Status"
-              :items="status"
+              label="Gender"
+              :items="genders"
             ></v-select>
           </v-col>
 
@@ -114,39 +116,39 @@
             md="6"
           >
             <v-text-field
-              v-model="accountDataLocale.company"
+              v-model="accountDataLocale.address"
               dense
               outlined
-              label="Company"
+              label="Address"
             ></v-text-field>
           </v-col>
 
           <!-- alert -->
-          <v-col cols="12">
-            <v-alert
-              color="warning"
-              text
-              class="mb-0"
-            >
-              <div class="d-flex align-start">
-                <v-icon color="warning">
-                  {{ icons.mdiAlertOutline }}
-                </v-icon>
+<!--          <v-col cols="12">-->
+<!--            <v-alert-->
+<!--              color="warning"-->
+<!--              text-->
+<!--              class="mb-0"-->
+<!--            >-->
+<!--              <div class="d-flex align-start">-->
+<!--                <v-icon color="warning">-->
+<!--                  {{ icons.mdiAlertOutline }}-->
+<!--                </v-icon>-->
 
-                <div class="ms-3">
-                  <p class="text-base font-weight-medium mb-1">
-                    Your email is not confirmed. Please check your inbox.
-                  </p>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-decoration-none warning--text"
-                  >
-                    <span class="text-sm">Resend Confirmation</span>
-                  </a>
-                </div>
-              </div>
-            </v-alert>
-          </v-col>
+<!--                <div class="ms-3">-->
+<!--                  <p class="text-base font-weight-medium mb-1">-->
+<!--                    Your email is not confirmed. Please check your inbox.-->
+<!--                  </p>-->
+<!--                  <a-->
+<!--                    href="javascript:void(0)"-->
+<!--                    class="text-decoration-none warning&#45;&#45;text"-->
+<!--                  >-->
+<!--                    <span class="text-sm">Resend Confirmation</span>-->
+<!--                  </a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </v-alert>-->
+<!--          </v-col>-->
 
           <v-col cols="12">
             <v-btn
@@ -160,7 +162,7 @@
               outlined
               class="mt-4"
               type="reset"
-              @click.prevent="resetForm"
+              @click.prevent="redirectToDashboard"
             >
               Cancel
             </v-btn>
@@ -174,16 +176,25 @@
 <script>
 import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import {getAdminInfo, getUserInfo} from "@/api/user";
+import {mapState} from "vuex";
 
 export default {
+  name: 'AccountSettings',
   props: {
     accountData: {
       type: Object,
       default: () => {},
     },
   },
+
+  mounted() {
+    this.initUserInfo();
+  },
+
   setup(props) {
     const status = ['Active', 'Inactive', 'Pending', 'Closed']
+    const genders = ['Male', 'Female', 'Other']
 
     const accountDataLocale = ref(JSON.parse(JSON.stringify(props.accountData)))
 
@@ -195,11 +206,70 @@ export default {
       status,
       accountDataLocale,
       resetForm,
+      genders,
+
       icons: {
         mdiAlertOutline,
         mdiCloudUploadOutline,
       },
+      rules: {
+        email: [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+/.test(v) || 'E-mail must be valid',
+        ],
+        required: [value => !!value || 'Required.'],
+      }
     }
   },
+
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+      role: state => state.user.role,
+    }),
+  },
+
+  methods: {
+    initUserInfo() {
+      console.log(this.id)
+      console.log(this.role)
+      if (this.role === 'USER') {
+        getUserInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.accountDataLocale = {...data}
+          }
+        })
+      } else {
+        getAdminInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.accountDataLocale = {...data}
+          }
+        })
+      }
+    },
+
+    saveChange() {
+      if (this.validate() === false) {
+        this.$alert("Please fill required field.")
+        return
+      }
+      const param = {
+        ...this.accountDataLocale
+      }
+      if (this.role.toLowerCase() === "user") {
+        // update user info
+        this.initUserInfo()
+      } else {
+        // update admin info
+        this.initUserInfo()
+      }
+    },
+
+    redirectToDashboard() {
+      this.$router.push('/dashboard')
+    }
+  }
 }
 </script>

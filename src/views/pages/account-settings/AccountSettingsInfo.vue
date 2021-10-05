@@ -6,13 +6,17 @@
     <v-form class="multi-col-validation">
       <v-card-text class="pt-5">
         <v-row>
-          <v-col cols="12">
-            <v-textarea
-              v-model="optionsLocal.bio"
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="optionsLocal.dateOfBirth"
               outlined
-              rows="3"
-              label="Bio"
-            ></v-textarea>
+              dense
+              label="Birthday"
+              disabled
+            ></v-text-field>
           </v-col>
 
           <v-col
@@ -20,10 +24,37 @@
             md="6"
           >
             <v-text-field
-              v-model="optionsLocal.birthday"
+              v-model="optionsLocal.userName"
               outlined
               dense
-              label="Birthday"
+              label="Username"
+              disabled
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="optionsLocal.firstName"
+              outlined
+              dense
+              label="FirstName"
+              disabled
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="optionsLocal.lastName"
+              outlined
+              dense
+              label="LastName"
+              disabled
             ></v-text-field>
           </v-col>
 
@@ -36,6 +67,7 @@
               outlined
               dense
               label="Phone"
+              disabled
             ></v-text-field>
           </v-col>
 
@@ -44,10 +76,11 @@
             md="6"
           >
             <v-text-field
-              v-model="optionsLocal.website"
+              v-model="optionsLocal.email"
               outlined
               dense
-              label="Website"
+              label="Email"
+              disabled
             ></v-text-field>
           </v-col>
 
@@ -55,80 +88,28 @@
             cols="12"
             md="6"
           >
-            <v-select
-              v-model="optionsLocal.country"
-              outlined
-              dense
-              label="Country"
-              :items="['USA','UK','AUSTRALIA','BRAZIL']"
-            ></v-select>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-select
-              v-model="optionsLocal.languages"
-              outlined
-              dense
-              multiple
-              chips
-              small-chips
-              label="Languages"
-              :items="['English','Spanish','French','German']"
-            ></v-select>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <p class="text--primary mt-n3 mb-2">
-              Gender
-            </p>
-            <v-radio-group
+            <v-text-field
               v-model="optionsLocal.gender"
-              row
-              class="mt-0"
-              hide-details
-            >
-              <v-radio
-                value="male"
-                label="Male"
-              >
-              </v-radio>
-              <v-radio
-                value="female"
-                label="Female"
-              >
-              </v-radio>
-              <v-radio
-                value="other"
-                label="Other"
-              >
-              </v-radio>
-            </v-radio-group>
+              outlined
+              dense
+              label="Gender"
+              disabled
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="optionsLocal.address"
+              outlined
+              dense
+              label="Address"
+              disabled
+            ></v-text-field>
           </v-col>
         </v-row>
-      </v-card-text>
-
-      <v-card-text>
-        <v-btn
-          color="primary"
-          class="me-3 mt-3"
-        >
-          Save changes
-        </v-btn>
-        <v-btn
-          outlined
-          class="mt-3"
-          color="secondary"
-          type="reset"
-          @click.prevent="resetForm"
-        >
-          Cancel
-        </v-btn>
       </v-card-text>
     </v-form>
   </v-card>
@@ -136,6 +117,8 @@
 
 <script>
 import { ref } from '@vue/composition-api'
+import { getAdminInfo, getUserInfo } from "@/api/user";
+import {mapState} from "vuex";
 
 export default {
   props: {
@@ -144,6 +127,18 @@ export default {
       default: () => {},
     },
   },
+
+  mounted() {
+    this.initInfo()
+  },
+
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+      role: state => state.user.role,
+    }),
+  },
+
   setup(props) {
     const optionsLocal = ref(JSON.parse(JSON.stringify(props.informationData)))
 
@@ -153,5 +148,27 @@ export default {
 
     return { optionsLocal, resetForm }
   },
+
+  methods: {
+    initInfo() {
+      console.log(this.id)
+      console.log(this.role)
+      if (this.role === 'USER') {
+        getUserInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.optionsLocal = {...data}
+          }
+        })
+      } else {
+        getAdminInfo(this.id).then(resp => {
+          const data = resp.data;
+          if (data) {
+            this.optionsLocal = {...data}
+          }
+        })
+      }
+    },
+  }
 }
 </script>
