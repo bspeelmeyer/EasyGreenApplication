@@ -7,6 +7,13 @@
         :items-per-page="20"
         class="text-center text-uppercase"
       >
+        <template v-slot:item.health>
+          <v-icon
+            style="color: green"
+          >
+          {{ icons.mdiEmoticonHappy}}
+          </v-icon>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
             small
@@ -29,8 +36,8 @@
 
 <script>
 import { mapState } from "vuex";
-import {deleteSelectedPlant, getDataListByUserId} from "@/api/data";
-import { mdiDelete, mdiPencil} from '@mdi/js';
+import { deleteSelectedPlant, getDataListByUserId } from "@/api/data";
+import { mdiDelete, mdiPencil, mdiEmoticonHappy} from '@mdi/js';
 
 const headers = [
   {
@@ -47,6 +54,9 @@ const headers = [
   },
   {
     text: 'Air Temperature', value: 'temperature',
+  },
+   {
+    text: 'Health', value: 'health', sortable: false
   },
   {text: 'Actions', value: 'actions', sortable: false},
 ]
@@ -74,6 +84,7 @@ export default {
       icons: {
         mdiPencil,
         mdiDelete,
+        mdiEmoticonHappy,
       },
     }
   },
