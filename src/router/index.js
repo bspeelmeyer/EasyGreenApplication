@@ -14,36 +14,6 @@ const routes = [
     component: () => import('@/views/dashboard/Dashboard.vue'),
   },
   {
-    path: '/typography',
-    name: 'typography',
-    component: () => import('@/views/typography/Typography.vue'),
-  },
-  {
-    path: '/icons',
-    name: 'icons',
-    component: () => import('@/views/icons/Icons.vue'),
-  },
-  {
-    path: '/cards',
-    name: 'cards',
-    component: () => import('@/views/cards/Card.vue'),
-  },
-  {
-    path: '/simple-table',
-    name: 'simple-table',
-    component: () => import('@/views/simple-table/SimpleTable.vue'),
-  },
-  {
-    path: '/about-us',
-    name: 'about-us',
-    component: () => import('@/views/dashboard/AboutUs.vue'),
-  },
-  {
-    path: '/form-layouts',
-    name: 'form-layouts',
-    component: () => import('@/views/form-layouts/FormLayouts.vue'),
-  },
-  {
     path: '/pages/account-settings',
     name: 'pages-account-settings',
     component: () => import('@/views/pages/account-settings/AccountSettings.vue'),
@@ -117,6 +87,11 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+   document.title = `${ process.env.VUE_APP_TITLE } - ${to.name}`
+   next()
 })
 
 export default router

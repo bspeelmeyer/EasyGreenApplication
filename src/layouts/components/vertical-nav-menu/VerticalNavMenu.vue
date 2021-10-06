@@ -57,7 +57,6 @@
           href="/admin-dashboard"
         ></nav-menu-link>
       </nav-menu-group>
-      <nav-menu-section-title title="USER INTERFACE"></nav-menu-section-title>
 
     </v-list>
   </v-navigation-drawer>
