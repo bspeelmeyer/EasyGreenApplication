@@ -35,7 +35,7 @@ Build premium quality applications with ease. Use our innovative admin template 
 
 [View Demo](https://themeselection.com/demo/materio-vuetify-vuejs-admin-template-free/demo/)
 
-## Installation ⚒️
+## How to Install/extention ⚒️
 
 > We recommend you use yarn
 
@@ -62,6 +62,54 @@ Build premium quality applications with ease. Use our innovative admin template 
 
    # npm run build [for npm]
    ```
+## How to run the Front-End application [IntelliJ IDEA]
+
+1. Step 1- Open a new terminal in by clicking  the green play button at the top of the application.
+
+2. Step 2- A new terminal opens then the user has to type in “yarn serve”.
+
+3. Step 3- Press enter  
+
+4. Step 4- when finish running click on the Local host link
+
+5. Step 5- It will go to web broweser 
+## Notes
+- User is able run both back-end and front-end at the same time 
+
+## How to Stop the Front-End application [IntelliJ IDEA]
+
+1. Step 1- Go back to the application  
+
+2. Step 2- Press Ctrl+C
+
+3. Step 3- The Application has stop running 
+
+## Notes: 
+# Applicationn User can Run
+
+1. IntelliJ IDEA
+
+2. Visual Studios 
+
+3. WebStorm
+
+# Web browsers
+
+- Internet Explorer
+
+- Google Chrome
+
+- Mozilla Firefox
+
+- Safari
+
+## URL Links
+# Github
+1. https://github.com/bspeelmeyer/EasyGreenBackend.git
+2. https://github.com/bspeelmeyer/EasyGreenApplication.git
+
+# Cloud Database
+- The Cloud database hasn't been developed to a cloud there no link
 
 ## What's Included 📦
 
