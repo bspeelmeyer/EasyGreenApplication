@@ -1,39 +1,31 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span class="font-weight-semi-bold">Edit Plants</span>
+      <span class="font-weight-semi-bold">Create Organization</span>
     </v-card-title>
     <v-card-text>
       <v-form>
         <v-text-field
-          v-model="Id"
-          label="Plant ID"
+          v-model="Name"
+          label="Name"
           outlined
           dense
-          disabled
-          placeholder="Id"
+          placeholder="Name"
         ></v-text-field>
 
         <v-text-field
           v-model="Type"
-          label="Plant Type"
+          label="Location"
           outlined
           dense
-          placeholder="Plant Type"
+          placeholder="Location"
         ></v-text-field>
 
-        <v-select
-          :items="items"
-          label="Assign user"
-          dense
-          outlined
-        ></v-select>
-
         <v-btn color="primary">
-          Confirm Edit
+          Create
         </v-btn>
         <v-btn
-          href="organization-board"
+          href="admin-dashboard"
           outlined
           class="mx-2"
         >
@@ -48,8 +40,8 @@ import { ref } from '@vue/composition-api'
 
 export default {
   setup() {
-    const Id = ref('1')
-    const Type = ref('Fern')
+    const Id = ref('')
+    const Type = ref('')
     const items = ref(['1', '15', '18', '21'])
 
     return {
