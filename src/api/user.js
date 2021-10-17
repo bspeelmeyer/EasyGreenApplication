@@ -15,3 +15,8 @@ export async function getUserInfo(id) {
 export async function getAdminInfo(id) {
   return request.get('/api/admin/' + id)
 }
+
+export async function updateUserInfo(param) {
+  return request.put('/api/user', param)
+}
+
