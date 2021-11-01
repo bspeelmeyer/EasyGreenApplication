@@ -201,7 +201,7 @@ export default {
     ]
 
     return {
-      isPasswordVisible,
+      isPasswordVisible: false,
       socialLink,
       email: 'user@user.com',
       password: 'user',

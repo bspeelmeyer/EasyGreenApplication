@@ -29,7 +29,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDataListByUserId } from "@/api/data";
+import {deleteSelectedPlant, getDataListByUserId} from "@/api/data";
 import { mdiDelete, mdiPencil} from '@mdi/js';
 
 const headers = [
@@ -80,14 +80,16 @@ export default {
 
   methods: {
     deleteItem(item) {
-      console.log(item)
+      console.log(item.id)
       console.log(this.plantsData.indexOf(item))
-      if (!confirm("Are you sure to delete this plant?")) {
-        return
-      }
-      // TODO
-      // Delete specific plant that this user chose
-
+      this.$confirm('Are you sure you want to delete this plant?',
+        'Delete plant',{
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+      }).then(() => deleteSelectedPlant(item.id)).then(() => {
+        this.$alert("The plant has been deleted.")
+      })
     },
 
     editItem(item) {
