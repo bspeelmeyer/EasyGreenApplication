@@ -7,11 +7,17 @@ const routes = [
   {
     path: '/',
     redirect: '/pages/login',
+    meta: {
+      title: 'Login'
+    }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/dashboard/Dashboard.vue'),
+    meta: {
+      title: 'User Dashboard'
+    }
   },
   {
     path: '/pages/account-settings',
@@ -50,6 +56,10 @@ const routes = [
     path: '/admin-dashboard',
     name: 'admin-dashboard',
     component: () => import('@/views/adminDashboard/AdminDashboard.vue'),
+    meta: {
+      title: 'Admin Dashboard',
+      layout: 'blank'
+    }
   },
   {
     path: '/organization-board',
@@ -87,11 +97,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-})
-
-router.beforeEach((to, from, next) => {
-   document.title = `${ process.env.VUE_APP_TITLE } - ${to.name}`
-   next()
 })
 
 export default router

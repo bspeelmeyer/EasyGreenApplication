@@ -242,11 +242,26 @@ export default {
       this.$store.dispatch('Login', params).then(res => {
         console.log(res)
         const response = res.data
-        this.loginAlert = !this.loginAlert
-        auth.setToken(response.token)
-        setTimeout(() => {
-          this.$router.replace('/dashboard')
-        }, 2000)
+        console.log(response.role)
+        if (res.code !== 200) {
+          this.$alert(res.message);
+        } else {
+          if (response.role === "USER") {
+            this.loginAlert = !this.loginAlert
+            auth.setToken(response.token)
+            setTimeout(() => {
+              this.$router.replace('/dashboard')
+            }, 2000)
+          } else if (response.role === "ADMIN") {
+            this.loginAlert = !this.loginAlert
+            auth.setToken(response.token)
+            setTimeout(() => {
+              this.$router.replace('/admin-dashboard')
+            }, 2000)
+          }
+
+        }
+
       })
     },
     ...mapActions(['Login']),
