@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :value="isDrawerOpen"
+    :value="isDrawOpen"
     app
     floating
     width="260"
@@ -39,18 +39,23 @@
     >
       <nav-menu-link
         title="Dashboard"
-        :to="{ name: 'dashboard' }"
+        :to="{ name: 'admin-dashboard' }"
         :icon="icons.mdiHomeOutline"
       ></nav-menu-link>
       <nav-menu-link
-        title="My Plants"
-        :to="{ name: 'my-plants'}"
-        :icon="icons.mdiTree"
+        title="Organizations"
+        :to="{ name: 'organization-board'}"
+        :icon="icons.mdiDomain"
       ></nav-menu-link>
       <nav-menu-link
-        title="Account Settings"
-        :to="{ name: 'pages-account-settings'}"
-        :icon="icons.mdiAccountCogOutline"
+        title="Users"
+        :to="{ name: 'edit-user'}"
+        :icon="icons.mdiAccount"
+      ></nav-menu-link>
+      <nav-menu-link
+        title="Plants"
+        :to="{ name: 'edit-plant'}"
+        :icon="icons.mdiTree"
       ></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
@@ -68,19 +73,23 @@ import {
   mdiFormSelect,
   mdiAccountCogOutline,
   mdiTree,
+  mdiHome,
+  mdiAccount,
+  mdiDomain
 } from '@mdi/js'
 import NavMenuSectionTitle from './components/NavMenuSectionTitle.vue'
 import NavMenuGroup from './components/NavMenuGroup.vue'
 import NavMenuLink from './components/NavMenuLink.vue'
 
 export default {
+  name: "AdminVerticalNavMenu",
   components: {
     NavMenuSectionTitle,
     NavMenuGroup,
     NavMenuLink,
   },
   props: {
-    isDrawerOpen: {
+    isDrawOpen: {
       type: Boolean,
       default: null,
     },
@@ -96,7 +105,10 @@ export default {
         mdiFileOutline,
         mdiFormSelect,
         mdiAccountCogOutline,
-        mdiTree
+        mdiTree,
+        mdiHome,
+        mdiAccount,
+        mdiDomain
       },
     }
   },

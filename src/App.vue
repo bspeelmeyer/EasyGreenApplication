@@ -9,11 +9,13 @@ import { computed } from '@vue/composition-api'
 import { useRouter } from '@/utils'
 import LayoutBlank from '@/layouts/Blank.vue'
 import LayoutContent from '@/layouts/Content.vue'
+import AdminLayout from '@/layouts/AdminContent.vue'
 
 export default {
   components: {
     LayoutBlank,
     LayoutContent,
+    AdminLayout
   },
   setup() {
     const { route } = useRouter()
@@ -23,6 +25,8 @@ export default {
       if (route.value.name === null) return null
 
       if (route.value.meta.layout === 'blank') return 'layout-blank'
+
+      if (route.value.meta.layout === 'admin-layout') return AdminLayout
 
       return 'layout-content'
     })
