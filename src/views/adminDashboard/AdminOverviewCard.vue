@@ -12,7 +12,7 @@
         >
           <v-btn
             block
-            href="create-organization"
+            :to="{ name: 'organization-board' }"
             color="primary"
             elevation="2"
           >
