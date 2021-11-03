@@ -102,7 +102,7 @@ export default {
 
   methods: {
     redirectToAbout() {
-      this.$router.push('/about-us')
+      this.$router.push('/admin-about-us')
     }
   }
 }

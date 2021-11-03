@@ -51,6 +51,15 @@ const routes = [
     component: () => import('@/views/dashboard/AboutUs.vue'),
   },
   {
+    path: '/admin-about-us',
+    name: 'admin-about-us',
+    component: () => import('@/views/dashboard/AboutUs.vue'),
+    meta: {
+      title: 'About Us',
+      layout: "admin-layout"
+    }
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
