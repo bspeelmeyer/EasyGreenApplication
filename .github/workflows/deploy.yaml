@@ -2,11 +2,13 @@ name: Deploy to production
 
 on:
   push:
-    branches: [container]
+    branches: [develop]
+  pull: 
+    branches: [develop]
 
 jobs:
   build:
-    name: Build image
+    name: Build and push 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
