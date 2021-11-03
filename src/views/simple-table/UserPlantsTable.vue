@@ -14,21 +14,6 @@
           {{ icons.mdiEmoticonHappy}}
           </v-icon>
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(item)"
-          >
-            {{ icons.mdiPencil }}
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(item)"
-          >
-            {{ icons.mdiDelete }}
-          </v-icon>
-        </template>
       </v-data-table>
     </v-sheet>
   </div>
@@ -55,10 +40,9 @@ const headers = [
   {
     text: 'Air Temperature', value: 'temperature',
   },
-   {
+  {
     text: 'Health', value: 'health', sortable: false
-  },
-  {text: 'Actions', value: 'actions', sortable: false},
+  }
 ]
 
 export default {
