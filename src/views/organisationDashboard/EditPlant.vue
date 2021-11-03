@@ -124,7 +124,7 @@
 <script>
 import { mdiDelete, mdiPencil, mdiEmoticonHappy} from '@mdi/js';
 import { mapState } from "vuex";
-import { getAllPlant } from "@/api/plant";
+import {createPlant, deletePlantBySelect, getAllPlant, updatePlant} from "@/api/plant";
 
 const headers = [
   {
@@ -158,6 +158,8 @@ export default {
     headers: headers,
     plantsData: [],
     editedIndex: -1,
+    itemId: 0,
+    editedItemId: '',
     editedItem: {
       plantName: '',
       description: ''
@@ -201,20 +203,25 @@ export default {
     initialize () {},
 
     editItem (item) {
+      this.editedItemId = item.id
       this.editedIndex = this.plantsData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem (item) {
+      this.itemId = item.id
       this.editedIndex = this.plantsData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      this.plantsData.splice(this.editedIndex, 1)
-      this.closeDelete()
+      deletePlantBySelect(this.itemId).then(() => {
+        this.$alert("The plant has been deleted.")
+        this.plantsData.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
     },
 
     close () {
@@ -236,8 +243,27 @@ export default {
     save () {
       if (this.editedIndex > -1) {
         Object.assign(this.plantsData[this.editedIndex], this.editedItem)
+        const param = {
+          ...this.editedItem,
+          id: this.editedItemId
+        }
+        updatePlant(param).then((res) => {
+          if (res) {
+            this.$alert("Plant has been updated.")
+          }
+          window.location.reload()
+        })
       } else {
         this.plantsData.push(this.editedItem)
+        const param = {
+          ...this.editedItem
+        }
+        createPlant(param).then((resp) => {
+          if (resp.code === 200) {
+            alert('A plant has been created successfully!')
+          }
+          window.location.reload()
+        })
       }
       this.close()
     },

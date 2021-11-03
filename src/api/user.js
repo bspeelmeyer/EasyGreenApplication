@@ -28,3 +28,7 @@ export async function updateUserPassword(param) {
   return request.put('/api/user/update', param)
 }
 
+export async function deleteUserByPrimaryKey(id) {
+  return request.post('/api/user/delete/' + id)
+}
+

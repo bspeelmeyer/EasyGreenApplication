@@ -114,7 +114,13 @@
 <script>
 import { mdiDelete, mdiPencil} from '@mdi/js';
 import { mapState } from "vuex";
-import { getAllOrganization } from "@/api/organization";
+import {
+  createOrganization,
+  deleteOrganizationBySelect,
+  getAllOrganization,
+  updateOrganization
+} from "@/api/organization";
+import {createPlant} from "@/api/plant";
 
 const headers = [
   {
@@ -144,6 +150,8 @@ export default {
     dialogDelete: false,
     headers: headers,
     organisationsData: [],
+    organizationId: '',
+    editedItemId: '',
     editedIndex: -1,
     editedItem: {
       name: '',
@@ -185,20 +193,25 @@ export default {
     initialize () {},
 
     editItem (item) {
+      this.editedItemId = item.id
       this.editedIndex = this.organisationsData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem (item) {
+      this.organizationId = item.id
       this.editedIndex = this.organisationsData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      this.organisationsData.splice(this.editedIndex, 1)
-      this.closeDelete()
+      deleteOrganizationBySelect(this.organizationId).then(() => {
+        this.$alert("The organization has been deleted.")
+        this.organisationsData.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
     },
 
     close () {
@@ -220,8 +233,28 @@ export default {
     save () {
       if (this.editedIndex > -1) {
         Object.assign(this.organisationsData[this.editedIndex], this.editedItem)
+        const param = {
+          ...this.editedItem,
+          id: this.editedItemId
+        }
+        updateOrganization(param).then((res) => {
+          if (res) {
+            this.$alert("Organization has been updated.")
+          }
+          window.location.reload()
+        })
       } else {
+        console.log(this.editedItem)
         this.organisationsData.push(this.editedItem)
+        const param = {
+          ...this.editedItem
+        }
+        createOrganization(param).then((resp) => {
+          if (resp.code === 200) {
+            alert('An organization has been created successfully!')
+          }
+          window.location.reload()
+        })
       }
       this.close()
     },

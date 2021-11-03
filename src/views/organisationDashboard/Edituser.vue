@@ -85,8 +85,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.password"
-                      label="Password"
+                      v-model="editedItem.phone"
+                      label="Phone"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -95,8 +95,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.phone"
-                      label="Phone"
+                      v-model="editedItem.password"
+                      label="Password"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -117,6 +117,16 @@
                     <v-text-field
                       v-model="editedItem.address"
                       label="Address"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.dateOfBirth"
+                      label="Date of Birth"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -184,7 +194,7 @@
 <script>
 import { mdiDelete, mdiPencil} from '@mdi/js';
 import { mapState } from "vuex";
-import { getAllUser } from "@/api/user";
+import {createUser, deleteUserByPrimaryKey, getAllUser, updateUserInfo} from "@/api/user";
 
 const headers = [
   {
@@ -238,7 +248,9 @@ export default {
     dialogDelete: false,
     headers: headers,
     usersData: [],
+    userId: 0,
     editedIndex: -1,
+    editedItemId: '',
     editedItem: {
       firstName: '',
       lastName: '',
@@ -246,7 +258,8 @@ export default {
       email: '',
       phone: '',
       gender: '',
-      address: ''
+      address: '',
+      dateOfBirth: ''
     },
     defaultItem: {
       firstName: '',
@@ -255,7 +268,8 @@ export default {
       email: '',
       phone: '',
       gender: '',
-      address: ''
+      address: '',
+      dateOfBirth: ''
     },
 
     icons: {
@@ -291,20 +305,25 @@ export default {
     initialize () {},
 
     editItem (item) {
+      this.editedItemId = item.id
       this.editedIndex = this.usersData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem (item) {
+      this.userId = item.id
       this.editedIndex = this.usersData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      this.usersData.splice(this.editedIndex, 1)
-      this.closeDelete()
+      deleteUserByPrimaryKey(this.userId).then(() => {
+        this.$alert("The user has been deleted.")
+        this.usersData.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
     },
 
     close () {
@@ -326,8 +345,26 @@ export default {
     save () {
       if (this.editedIndex > -1) {
         Object.assign(this.usersData[this.editedIndex], this.editedItem)
+        const param = {
+          ...this.editedItem,
+          id: this.editedItemId
+        }
+        updateUserInfo(param).then((resp) => {
+          if (resp) {
+            this.$alert("User has been updated.")
+          }
+        })
       } else {
         this.usersData.push(this.editedItem)
+        const param = {
+          ...this.editItem
+        }
+        createUser(param).then((res) => {
+          if (res.code === 200) {
+            alert('A user has been created successfully!')
+          }
+          window.location.reload()
+        })
       }
       this.close()
     },
