@@ -8,6 +8,20 @@
       <v-row>
         <v-col
           cols="12"
+          md="80"
+        >
+          <v-card>
+            <v-img
+              src="@/assets/images/pages/admin.jpg"
+              height="250"
+            />
+            <v-card-title>
+              HELLO ADMIN
+            </v-card-title>
+          </v-card>
+        </v-col>
+        <v-col
+          cols="12"
           md="4"
         >
           <v-btn

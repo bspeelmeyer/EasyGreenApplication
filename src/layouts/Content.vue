@@ -15,7 +15,7 @@
             class="d-block d-lg-none me-2"
             @click="isDrawerOpen = !isDrawerOpen"
           ></v-app-bar-nav-icon>
-         
+
 
           <v-spacer></v-spacer>
 
@@ -30,7 +30,7 @@
             </v-icon>
           </a>
           <theme-switcher></theme-switcher>
-          
+
           <app-bar-user-menu></app-bar-user-menu>
         </div>
       </div>
@@ -54,7 +54,7 @@
         <div class="mx-6 d-flex justify-space-between">
           <span>
             <a
-              href="https://themeselection.com"
+              href="https://github.com/EasyGreenDevelopment/EasyGreenApplication"
               class="text-decoration-none"
               target="_blank"
             >EasyGreen </a>&copy; 2021</span>

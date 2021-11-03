@@ -54,7 +54,7 @@
         <div class="mx-6 d-flex justify-space-between">
           <span>
             <a
-              href="https://themeselection.com"
+              href="https://github.com/EasyGreenDevelopment/EasyGreenApplication"
               class="text-decoration-none"
               target="_blank"
             >EasyGreen </a>&copy; 2021</span>

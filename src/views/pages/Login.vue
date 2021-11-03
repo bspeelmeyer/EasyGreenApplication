@@ -186,8 +186,8 @@ export default {
     return {
       isPasswordVisible: false,
       socialLink,
-      email: 'user@user.com',
-      password: 'user',
+      email: 'test@gmail.com',
+      password: 'password',
       valid: true,
       loginAlert: false,
       validateAlert: false,
