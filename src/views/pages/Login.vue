@@ -187,7 +187,7 @@ export default {
       isPasswordVisible: false,
       socialLink,
       email: 'test@gmail.com',
-      password: 'password',
+      password: 'TEST123!',
       valid: true,
       loginAlert: false,
       validateAlert: false,
@@ -228,6 +228,7 @@ export default {
         console.log(response.role)
         if (res.code !== 200) {
           this.$alert(res.message);
+          this.loginAlert = true
         } else {
           if (response.role === "USER") {
             this.loginAlert = !this.loginAlert

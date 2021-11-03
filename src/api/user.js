@@ -24,3 +24,7 @@ export async function getAllUser(param) {
   return request.get('/api/user', param)
 }
 
+export async function updateUserPassword(param) {
+  return request.put('/api/user/update', param)
+}
+

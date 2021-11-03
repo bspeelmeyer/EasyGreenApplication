@@ -20,7 +20,6 @@
                 label="Current Password"
                 outlined
                 dense
-                :rules="rules.password"
                 @click:append="isCurrentPasswordVisible = !isCurrentPasswordVisible"
               ></v-text-field>
 
@@ -108,6 +107,7 @@
           <v-btn
             color="primary"
             class="me-3 mt-3"
+            @click="updatePassword"
           >
             Save changes
           </v-btn>
@@ -128,8 +128,8 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
-import {getUserInfo} from "@/api/user";
-import {mapState} from "vuex";
+import { getUserInfo, updateUserPassword } from "@/api/user";
+import { mapState } from "vuex";
 
 const passwordHint = "Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n" +
   "out of !, $, *, &, +, ?"
@@ -186,12 +186,19 @@ export default {
           this.$alert("New password is not same as confirm password.")
           return
         }
+
         const param = {
+          ...data,
           id: this.id,
           password: this.newPassword
         }
         if (this.role.toLowerCase() === 'user') {
           // update user password
+          updateUserPassword(param).then(resp => {
+            if (resp) {
+              this.$alert("Password has been updated")
+            }
+          })
         } else {
           // update admin password
         }
