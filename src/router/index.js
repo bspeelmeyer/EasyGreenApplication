@@ -25,6 +25,11 @@ const routes = [
     component: () => import('@/views/userPlants/IndividualPlant.vue'),
   },
   {
+    path: '/sub-detail-plant/:id',
+    name: 'sub-detail-plant',
+    component: () => import('@/views/userPlants/SubDetailPlant.vue'),
+  },
+  {
     path: '/pages/account-settings',
     name: 'pages-account-settings',
     component: () => import('@/views/pages/account-settings/AccountSettings.vue'),

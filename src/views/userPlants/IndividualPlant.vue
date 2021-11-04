@@ -45,8 +45,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
+                      v-model="editedItem.gardenLight"
+                      label="Garden Light"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -55,8 +55,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="editedItem.humidity"
+                      label="Humidity"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -65,8 +65,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="editedItem.soilMoisture"
+                      label="Soil Moisture"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -75,18 +75,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.temperature"
+                      label="Temperature"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -207,18 +197,16 @@ export default {
     editedIndex: -1,
     itemId: '',
     editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      gardenLight: 0,
+      humidity: 0,
+      soilMoisture: 0,
+      temperature: 0,
     },
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      gardenLight: 0,
+      humidity: 0,
+      soilMoisture: 0,
+      temperature: 0,
     },
 
     icons: {
@@ -256,8 +244,10 @@ export default {
 
     editItem (item) {
       this.editedIndex = this.plantsData.indexOf(item)
+      console.log(item)
+      this.$router.push({path: `/sub-detail-plant/${item.id}`})
       this.editedItem = Object.assign({}, item)
-      this.dialog = true
+      // this.dialog = true
     },
 
     deleteItem (item) {
