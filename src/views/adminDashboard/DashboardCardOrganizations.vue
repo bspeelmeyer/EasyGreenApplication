@@ -4,32 +4,18 @@
       <span class="font-weight-semi-bold">Organizations</span>
     </v-card-title>
     <v-card-text>
-      <v-simple-table
-        height="300"
-        fixed-header
-      >
+      <v-simple-table height="300" fixed-header>
         <template v-slot:default>
           <thead>
             <tr>
-              <th class="text-uppercase">
-                Name
-              </th>
-              <th class="text-center text-uppercase">
-                Users
-              </th>
-              <th class="text-center text-uppercase">
-                Plants
-              </th>
-              <th class="text-center text-uppercase">
-                View
-              </th>
+              <th class="text-uppercase">Name</th>
+              <th class="text-center text-uppercase">Users</th>
+              <th class="text-center text-uppercase">Plants</th>
+              <th class="text-center text-uppercase">View</th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="item in orgs"
-              :key="item.org"
-            >
+            <tr v-for="item in orgs" :key="item.org">
               <td>{{ item.name }}</td>
               <td class="text-center">
                 {{ item.users }}
@@ -38,11 +24,15 @@
                 {{ item.plants }}
               </td>
               <td class="text-center">
-                <v-btn
-                  color="primary"
-                  href="/organization-board"
-                >
-                  Manage
+                <v-btn plain href="/organization-board">
+                  <v-icon large class="mr-2">
+                    {{ icons.mdiPencil }}
+                  </v-icon>
+                </v-btn>
+                <v-btn plain>
+                  <v-icon large @click="deleteItem(item)">
+                    {{ icons.mdiDelete }}
+                  </v-icon>
                 </v-btn>
               </td>
             </tr>
@@ -53,7 +43,18 @@
   </v-card>
 </template>
 <script>
+import { mdiDelete, mdiPencil } from '@mdi/js'
+
 export default {
+  data() {
+    return {
+      icons: {
+        mdiPencil,
+        mdiDelete,
+      },
+    }
+  },
+
   setup() {
     const orgs = [
       {

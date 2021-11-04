@@ -79,23 +79,6 @@
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
 
-            <div class="d-flex align-center justify-space-between flex-wrap">
-              <v-checkbox
-                label="Remember Me"
-                hide-details
-                class="me-3 mt-1"
-              >
-              </v-checkbox>
-
-              <!-- forgot link -->
-              <a
-                href="javascript:void(0)"
-                class="mt-1"
-              >
-                Forgot Password?
-              </a>
-            </div>
-
             <v-btn
               block
               color="primary"
@@ -201,10 +184,10 @@ export default {
     ]
 
     return {
-      isPasswordVisible,
+      isPasswordVisible: false,
       socialLink,
-      email: 'user@user.com',
-      password: 'user',
+      email: 'test@gmail.com',
+      password: 'TEST123!',
       valid: true,
       loginAlert: false,
       validateAlert: false,
@@ -242,11 +225,27 @@ export default {
       this.$store.dispatch('Login', params).then(res => {
         console.log(res)
         const response = res.data
-        this.loginAlert = !this.loginAlert
-        auth.setToken(response.token)
-        setTimeout(() => {
-          this.$router.replace('/dashboard')
-        }, 2000)
+        console.log(response.role)
+        if (res.code !== 200) {
+          this.$alert(res.message);
+          this.loginAlert = true
+        } else {
+          if (response.role === "USER") {
+            this.loginAlert = !this.loginAlert
+            auth.setToken(response.token)
+            setTimeout(() => {
+              this.$router.replace('/dashboard')
+            }, 2000)
+          } else if (response.role === "ADMIN") {
+            this.loginAlert = !this.loginAlert
+            auth.setToken(response.token)
+            setTimeout(() => {
+              this.$router.replace('/admin-dashboard')
+            }, 2000)
+          }
+
+        }
+
       })
     },
     ...mapActions(['Login']),

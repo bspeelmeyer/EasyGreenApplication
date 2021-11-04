@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span class="font-weight-semibold">Statistics Card</span>
+      <span class="font-weight-semibold">{{ plantName }} Statistics</span>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -15,8 +15,7 @@
     </v-card-title>
 
     <v-card-subtitle class="mb-8 mt-n5">
-      <span class="font-weight-semibold text--primary me-1">Total 48.5% Growth</span>
-      <span>😎 this month</span>
+      <span>😎</span>
     </v-card-subtitle>
 
     <v-card-text>
@@ -58,34 +57,43 @@
 
 <script>
 // eslint-disable-next-line object-curly-newline
-import { mdiAccountOutline, mdiCurrencyUsd, mdiTrendingUp, mdiDotsVertical, mdiLabelOutline } from '@mdi/js'
+import { mdiAccountOutline, mdiCurrencyUsd, mdiTrendingUp, mdiDotsVertical, mdiLabelOutline, mdiTemperatureCelsius, mdiWater, mdiPot, mdiWeatherSunny } from '@mdi/js'
+import { getDataById } from "@/api/data";
 
 export default {
+  mounted() {
+    this.initData();
+  },
+
+  data: () => ({
+    plantName: '',
+  }),
+
   setup() {
     const statisticsData = [
       {
-        title: 'Sales',
-        total: '245k',
+        title: 'Temperature',
+        total: '10°',
       },
       {
-        title: 'Customers',
-        total: '12.5k',
+        title: 'Humidity',
+        total: '32%',
       },
       {
-        title: 'Product',
-        total: '1.54k',
+        title: 'Soil Moisture',
+        total: '54%',
       },
       {
-        title: 'Revenue',
-        total: '$88k',
+        title: 'Light Intensity',
+        total: '24Lux',
       },
     ]
 
     const resolveStatisticsIconVariation = data => {
-      if (data === 'Sales') return { icon: mdiTrendingUp, color: 'primary' }
-      if (data === 'Customers') return { icon: mdiAccountOutline, color: 'success' }
-      if (data === 'Product') return { icon: mdiLabelOutline, color: 'warning' }
-      if (data === 'Revenue') return { icon: mdiCurrencyUsd, color: 'info' }
+      if (data === 'Temperature') return { icon: mdiTemperatureCelsius, color: 'primary'}
+      if (data === 'Humidity') return { icon: mdiWater, color: 'success' }
+      if (data === 'Soil Moisture') return { icon: mdiPot, color: 'warning' }
+      if (data === 'Light Intensity') return { icon: mdiWeatherSunny, color: 'info' }
 
       return { icon: mdiAccountOutline, color: 'success' }
     }
@@ -93,6 +101,8 @@ export default {
     return {
       statisticsData,
       resolveStatisticsIconVariation,
+      dataId: '',
+      plantName: 'Name',
 
       // icons
       icons: {
@@ -104,5 +114,18 @@ export default {
       },
     }
   },
+
+  methods: {
+    initData() {
+      this.dataId = this.$route.params && this.$route.params.id
+      getDataById(this.dataId).then((res) => {
+        const resData = res.data;
+        if (resData) {
+          this.plantName = resData.plantName
+
+        }
+      })
+    }
+  }
 }
 </script>

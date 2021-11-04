@@ -1,14 +1,14 @@
 <template>
   <v-card>
-    <v-card-title class="align-start">
-      <span>Weekly Overview</span>
+    <v-card-title className="align-start">
+      <span>Weekly Water Requirements</span>
 
       <v-spacer></v-spacer>
 
       <v-btn
         icon
         small
-        class="mt-n2 me-n3"
+        className="mt-n2 me-n3"
       >
         <v-icon size="22">
           {{ icons.mdiDotsVertical }}
@@ -23,22 +23,9 @@
         :series="chartData"
         height="210"
       ></vue-apex-charts>
-
-      <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">
-          45%
-        </h3>
-        <span>Your sales perfomance in 45% 🤩 better compare to last month</span>
+      <div className="d-flex align-center">
+        <span>Weekly Water Requirements is showing above</span>
       </div>
-
-      <v-btn
-        block
-        color="primary"
-        class="mt-6"
-        outlined
-      >
-        Details
-      </v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -46,17 +33,19 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 // eslint-disable-next-line object-curly-newline
-import { mdiDotsVertical, mdiTrendingUp, mdiCurrencyUsd } from '@mdi/js'
-import { getCurrentInstance } from '@vue/composition-api'
+import {mdiDotsVertical, mdiTrendingUp, mdiCurrencyUsd} from '@mdi/js'
+import {getCurrentInstance} from '@vue/composition-api'
 
 export default {
+  name: "WeeklyWaterRequirementsCard",
+
   components: {
     VueApexCharts,
   },
   setup() {
     const ins = getCurrentInstance()?.proxy
     const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
-    const customChartColor = $vuetify.theme.isDark ? '#3b3559' : '#f5f5f5'
+    const customChartColor = $vuetify.theme.isDark ? '#f5f5f5' : '#3b3559'
 
     const chartOptions = {
       colors: [
@@ -69,7 +58,7 @@ export default {
         customChartColor,
       ],
       chart: {
-        type: 'bar',
+        type: 'line',
         toolbar: {
           show: false,
         },
@@ -100,7 +89,7 @@ export default {
         },
         tickPlacement: 'on',
         labels: {
-          show: false,
+          show: true,
           style: {
             fontSize: '12px',
           },
@@ -111,10 +100,11 @@ export default {
         tickAmount: 4,
         labels: {
           offsetY: 3,
-          formatter: value => `$${value}`,
+          formatter: value => `${value}ml`,
         },
       },
       stroke: {
+        curve: 'smooth',
         width: [2, 2],
       },
       grid: {

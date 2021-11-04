@@ -8,11 +8,25 @@
       <v-row>
         <v-col
           cols="12"
+          md="80"
+        >
+          <v-card>
+            <v-img
+              src="@/assets/images/pages/admin.jpg"
+              height="250"
+            />
+            <v-card-title>
+              HELLO ADMIN
+            </v-card-title>
+          </v-card>
+        </v-col>
+        <v-col
+          cols="12"
           md="4"
         >
           <v-btn
             block
-            href="create-organization"
+            :to="{ name: 'organization-board' }"
             color="primary"
             elevation="2"
           >
@@ -25,7 +39,7 @@
         >
           <v-btn
             block
-            href="/create-user"
+            :to="{ name: 'edit-user' }"
             color="primary"
             elevation="2"
           >
@@ -38,7 +52,7 @@
         >
           <v-btn
             block
-            href="/create-plant"
+            :to="{ name: 'edit-plant' }"
             color="primary"
             elevation="2"
           >

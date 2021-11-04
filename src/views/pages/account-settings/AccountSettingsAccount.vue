@@ -47,7 +47,7 @@
     </v-card-text>
 
     <v-card-text>
-      <v-form class="multi-col-validation mt-6">
+      <v-form v-model="valid" ref="form" class="multi-col-validation mt-6" lazy-validation>
         <v-row>
           <v-col
             md="6"
@@ -154,6 +154,7 @@
             <v-btn
               color="primary"
               class="me-3 mt-4"
+              @click.prevent="saveChange"
             >
               Save changes
             </v-btn>
@@ -176,7 +177,7 @@
 <script>
 import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
-import {getAdminInfo, getUserInfo} from "@/api/user";
+import {getAdminInfo, getUserInfo, updateUserInfo} from "@/api/user";
 import {mapState} from "vuex";
 
 export default {
@@ -207,6 +208,7 @@ export default {
       accountDataLocale,
       resetForm,
       genders,
+      valid: true,
 
       icons: {
         mdiAlertOutline,
@@ -230,6 +232,10 @@ export default {
   },
 
   methods: {
+    validate() {
+      return this.$refs.form.validate()
+    },
+
     initUserInfo() {
       console.log(this.id)
       console.log(this.role)
@@ -254,16 +260,20 @@ export default {
       if (this.validate() === false) {
         this.$alert("Please fill required field.")
         return
-      }
-      const param = {
-        ...this.accountDataLocale
-      }
-      if (this.role.toLowerCase() === "user") {
-        // update user info
-        this.initUserInfo()
       } else {
-        // update admin info
-        this.initUserInfo()
+        const param = {
+          ...this.accountDataLocale,
+          id: this.id,
+        }
+        if (this.role.toLowerCase() === "user") {
+          // update user info
+          updateUserInfo(param).then(resp => {
+            if (resp) {
+              this.$alert("Profile has been updated.")
+              this.initUserInfo()
+            }
+          })
+        }
       }
     },
 

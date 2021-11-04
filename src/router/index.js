@@ -7,41 +7,27 @@ const routes = [
   {
     path: '/',
     redirect: '/pages/login',
+    meta: {
+      title: 'Login'
+    }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/dashboard/Dashboard.vue'),
+    meta: {
+      title: 'User Dashboard'
+    }
   },
   {
-    path: '/typography',
-    name: 'typography',
-    component: () => import('@/views/typography/Typography.vue'),
+    path: '/my-plants',
+    name: 'my-plants',
+    component: () => import('@/views/userPlants/IndividualPlant.vue'),
   },
   {
-    path: '/icons',
-    name: 'icons',
-    component: () => import('@/views/icons/Icons.vue'),
-  },
-  {
-    path: '/cards',
-    name: 'cards',
-    component: () => import('@/views/cards/Card.vue'),
-  },
-  {
-    path: '/simple-table',
-    name: 'simple-table',
-    component: () => import('@/views/simple-table/SimpleTable.vue'),
-  },
-  {
-    path: '/about-us',
-    name: 'about-us',
-    component: () => import('@/views/dashboard/AboutUs.vue'),
-  },
-  {
-    path: '/form-layouts',
-    name: 'form-layouts',
-    component: () => import('@/views/form-layouts/FormLayouts.vue'),
+    path: '/sub-detail-plant/:id',
+    name: 'sub-detail-plant',
+    component: () => import('@/views/userPlants/SubDetailPlant.vue'),
   },
   {
     path: '/pages/account-settings',
@@ -65,6 +51,20 @@ const routes = [
     },
   },
   {
+    path: '/about-us',
+    name: 'about-us',
+    component: () => import('@/views/dashboard/AboutUs.vue'),
+  },
+  {
+    path: '/admin-about-us',
+    name: 'admin-about-us',
+    component: () => import('@/views/dashboard/AboutUs.vue'),
+    meta: {
+      title: 'About Us',
+      layout: "admin-layout"
+    }
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
@@ -80,36 +80,58 @@ const routes = [
     path: '/admin-dashboard',
     name: 'admin-dashboard',
     component: () => import('@/views/adminDashboard/AdminDashboard.vue'),
+    meta: {
+      title: 'Admin Dashboard',
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/organization-board',
     name: 'organization-board',
     component: () => import('@/views/organisationDashboard/Organizationboard.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/edit-user',
     name: 'edit-user',
     component: () => import('@/views/organisationDashboard/Edituser.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/edit-plant',
     name: 'edit-plant',
     component: () => import('@/views/organisationDashboard/EditPlant.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/create-user',
     name: 'create-user',
     component: () => import('@/views/adminDashboard/CreateUser.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/create-plant',
     name: 'create-plant',
     component: () => import('@/views/adminDashboard/CreatePlant.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
   {
     path: '/create-organization',
     name: 'create-organization',
     component: () => import('@/views/adminDashboard/CreateOrg.vue'),
+    meta: {
+      layout: 'admin-layout'
+    }
   },
 ]
 
