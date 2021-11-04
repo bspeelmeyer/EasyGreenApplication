@@ -2,9 +2,9 @@ name: Deploy to production
 
 on:
   push:
-    branches: [develop]
-  pull: 
-    branches: [develop]
+    branches: [container]
+  pull_request: 
+    branches: [container]
 
 jobs:
   build:
