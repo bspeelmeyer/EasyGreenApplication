@@ -45,8 +45,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
+                      v-model="editedItem.gardenLight"
+                      label="Garden Light"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -55,8 +55,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="editedItem.humidity"
+                      label="Humidity"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -65,8 +65,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="editedItem.soilMoisture"
+                      label="Soil Moisture"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -75,18 +75,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.temperature"
+                      label="Temperature"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -162,6 +152,7 @@
 import { mdiDelete, mdiPencil, mdiEmoticonHappy} from '@mdi/js';
 import { getDataListByUserId } from "@/api/data";
 import { mapState } from "vuex";
+import {deletePlantBySelect} from "@/api/plant";
 
 const headers = [
   {
@@ -190,7 +181,6 @@ const headers = [
 export default {
   name: "IndividualPlant",
 
-
   async mounted() {
     await getDataListByUserId(this.id).then((resp) => {
       const data = resp.data
@@ -205,19 +195,18 @@ export default {
     headers: headers,
     plantsData: [],
     editedIndex: -1,
+    itemId: '',
     editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      gardenLight: 0,
+      humidity: 0,
+      soilMoisture: 0,
+      temperature: 0,
     },
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      gardenLight: 0,
+      humidity: 0,
+      soilMoisture: 0,
+      temperature: 0,
     },
 
     icons: {
@@ -229,7 +218,7 @@ export default {
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Plant' : 'Edit Plant'
     },
 
     ...mapState({
@@ -251,96 +240,29 @@ export default {
   },
 
   methods: {
-    initialize () {
-      this.desserts = [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-        },
-      ]
-    },
+    initialize () {},
 
     editItem (item) {
-      this.editedIndex = this.desserts.indexOf(item)
+      this.editedIndex = this.plantsData.indexOf(item)
+      console.log(item)
+      this.$router.push({path: `/sub-detail-plant/${item.id}`})
       this.editedItem = Object.assign({}, item)
-      this.dialog = true
+      // this.dialog = true
     },
 
     deleteItem (item) {
-      this.editedIndex = this.desserts.indexOf(item)
+      this.itemId = item.id
+      this.editedIndex = this.plantsData.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      this.desserts.splice(this.editedIndex, 1)
-      this.closeDelete()
+      deletePlantBySelect(this.itemId).then(() => {
+        this.$alert("The plant has been deleted.")
+        this.plantsData.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
     },
 
     close () {
@@ -361,9 +283,9 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        Object.assign(this.plantsData[this.editedIndex], this.editedItem)
       } else {
-        this.desserts.push(this.editedItem)
+        this.plantsData.push(this.editedItem)
       }
       this.close()
     },
