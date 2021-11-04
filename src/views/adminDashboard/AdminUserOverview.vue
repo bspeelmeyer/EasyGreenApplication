@@ -44,11 +44,15 @@
                 {{ item.organization }}
               </td>
               <td class="text-center">
-                <v-btn
-                  color="primary"
-                  href="/edit-user"
-                >
-                  Manage
+                  <v-btn plain href="/edit-user">
+                  <v-icon large class="mr-2">
+                    {{ icons.mdiPencil }}
+                  </v-icon>
+                </v-btn>
+                <v-btn plain>
+                  <v-icon large @click="deleteItem(item)">
+                    {{ icons.mdiDelete }}
+                  </v-icon>
                 </v-btn>
               </td>
             </tr>
@@ -59,7 +63,19 @@
   </v-card>
 </template>
 <script>
+import { mdiDelete, mdiPencil } from '@mdi/js'
+
+
 export default {
+   data() {
+    return {
+      icons: {
+        mdiPencil,
+        mdiDelete,
+      },
+    }
+  },
+  
   setup() {
     const orgs = [
       {

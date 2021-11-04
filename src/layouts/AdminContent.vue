@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <vertical-nav-menu :is-drawer-open.sync="isDrawerOpen"></vertical-nav-menu>
+    <admin-vertical-nav-menu :is-drawer-open.sync="isDrawOpen"></admin-vertical-nav-menu>
 
     <v-app-bar
       app
@@ -13,7 +13,7 @@
           <!-- Left Content -->
           <v-app-bar-nav-icon
             class="d-block d-lg-none me-2"
-            @click="isDrawerOpen = !isDrawerOpen"
+            @click="isDrawOpen = !isDrawOpen"
           ></v-app-bar-nav-icon>
 
 
@@ -74,21 +74,22 @@
 <script>
 import { ref } from '@vue/composition-api'
 import { mdiMagnify, mdiBellOutline, mdiGithub } from '@mdi/js'
-import VerticalNavMenu from './components/vertical-nav-menu/VerticalNavMenu.vue'
+import AdminVerticalNavMenu from './components/vertical-nav-menu/AdminVerticalNavMenu.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import AppBarUserMenu from './components/AppBarUserMenu.vue'
 
 export default {
+  name: "AdminContent",
   components: {
-    VerticalNavMenu,
+    AdminVerticalNavMenu,
     ThemeSwitcher,
     AppBarUserMenu,
   },
   setup() {
-    const isDrawerOpen = ref(null)
+    const isDrawOpen = ref(null)
 
     return {
-      isDrawerOpen,
+      isDrawOpen,
 
       // Icons
       icons: {
@@ -101,7 +102,7 @@ export default {
 
   methods: {
     redirectToAbout() {
-      this.$router.push('/about-us')
+      this.$router.push('/admin-about-us')
     }
   }
 }
@@ -126,3 +127,4 @@ export default {
   margin-right: auto;
 }
 </style>
+

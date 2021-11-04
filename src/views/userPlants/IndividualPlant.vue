@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="usersData"
+    :items="plantsData"
     sort-by="calories"
     class="elevation-1"
   >
@@ -9,7 +9,7 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Users</v-toolbar-title>
+        <v-toolbar-title>My Plants</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -28,7 +28,7 @@
               v-bind="attrs"
               v-on="on"
             >
-              New User
+              New Plant
             </v-btn>
           </template>
           <v-card>
@@ -45,8 +45,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.firstName"
-                      label="First Name"
+                      v-model="editedItem.name"
+                      label="Dessert name"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -55,8 +55,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.lastName"
-                      label="Last Name"
+                      v-model="editedItem.calories"
+                      label="Calories"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -65,8 +65,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.userName"
-                      label="Username"
+                      v-model="editedItem.fat"
+                      label="Fat (g)"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -75,8 +75,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.email"
-                      label="Email"
+                      v-model="editedItem.carbs"
+                      label="Carbs (g)"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -85,48 +85,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.phone"
-                      label="Phone"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.password"
-                      label="Password"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.gender"
-                      label="Gender"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.address"
-                      label="Address"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.dateOfBirth"
-                      label="Date of Birth"
+                      v-model="editedItem.protein"
+                      label="Protein (g)"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -154,7 +114,7 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">Sure to delete this User?</v-card-title>
+            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -164,6 +124,13 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+    </template>
+    <template v-slot:item.health>
+      <v-icon
+        style="color: green"
+      >
+        {{ icons.mdiEmoticonHappy}}
+      </v-icon>
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
@@ -192,40 +159,28 @@
 </template>
 
 <script>
-import { mdiDelete, mdiPencil} from '@mdi/js';
+import { mdiDelete, mdiPencil, mdiEmoticonHappy} from '@mdi/js';
+import { getDataListByUserId } from "@/api/data";
 import { mapState } from "vuex";
-import {createUser, deleteUserByPrimaryKey, getAllUser, updateUserInfo} from "@/api/user";
 
 const headers = [
   {
-    text: 'User Id', value: 'id'
+    text: 'Plant', value: 'plantName'
   },
   {
-    text: 'First Name', value: 'firstName'
+    text: 'Garden Light', value: 'lightIntensity'
   },
   {
-    text: 'Last Name', value: 'lastName'
+    text: 'Humidity', value: 'humidity'
   },
   {
-    text: 'Username', value: 'userName'
+    text: 'Soil Moisture', value: 'soilMoisture'
   },
   {
-    text: 'Email', value: 'email'
+    text: 'Air Temperature', value: 'temperature',
   },
   {
-    text: 'Password', value: 'password'
-  },
-  {
-    text: 'Phone', value: 'phone'
-  },
-  {
-    text: 'Gender', value: 'gender'
-  },
-  {
-    text: 'Date Of Birth', value: 'dateOfBirth'
-  },
-  {
-    text: 'Address', value: 'address'
+    text: 'Health', value: 'health', sortable: false
   },
   {
     text: 'Actions', value: 'actions', sortable: false
@@ -233,13 +188,14 @@ const headers = [
 ]
 
 export default {
-  name: "EditUser",
+  name: "IndividualPlant",
+
 
   async mounted() {
-    await getAllUser().then((resp) => {
+    await getDataListByUserId(this.id).then((resp) => {
       const data = resp.data
       console.log(data)
-      this.usersData = data
+      this.plantsData = data
     })
   },
 
@@ -247,40 +203,33 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: headers,
-    usersData: [],
-    userId: 0,
+    plantsData: [],
     editedIndex: -1,
-    editedItemId: '',
     editedItem: {
-      firstName: '',
-      lastName: '',
-      userName: '',
-      email: '',
-      phone: '',
-      gender: '',
-      address: '',
-      dateOfBirth: ''
+      name: '',
+      calories: 0,
+      fat: 0,
+      carbs: 0,
+      protein: 0,
     },
     defaultItem: {
-      firstName: '',
-      lastName: '',
-      userName: '',
-      email: '',
-      phone: '',
-      gender: '',
-      address: '',
-      dateOfBirth: ''
+      name: '',
+      calories: 0,
+      fat: 0,
+      carbs: 0,
+      protein: 0,
     },
 
     icons: {
       mdiPencil,
       mdiDelete,
+      mdiEmoticonHappy,
     },
   }),
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     },
 
     ...mapState({
@@ -302,28 +251,96 @@ export default {
   },
 
   methods: {
-    initialize () {},
+    initialize () {
+      this.desserts = [
+        {
+          name: 'Frozen Yogurt',
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+        },
+        {
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+        },
+        {
+          name: 'Eclair',
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0,
+        },
+        {
+          name: 'Cupcake',
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3,
+        },
+        {
+          name: 'Gingerbread',
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9,
+        },
+        {
+          name: 'Jelly bean',
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0,
+        },
+        {
+          name: 'Lollipop',
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0,
+        },
+        {
+          name: 'Honeycomb',
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5,
+        },
+        {
+          name: 'Donut',
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9,
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+        },
+      ]
+    },
 
     editItem (item) {
-      this.editedItemId = item.id
-      this.editedIndex = this.usersData.indexOf(item)
+      this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem (item) {
-      this.userId = item.id
-      this.editedIndex = this.usersData.indexOf(item)
+      this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      deleteUserByPrimaryKey(this.userId).then(() => {
-        this.$alert("The user has been deleted.")
-        this.usersData.splice(this.editedIndex, 1)
-        this.closeDelete()
-      })
+      this.desserts.splice(this.editedIndex, 1)
+      this.closeDelete()
     },
 
     close () {
@@ -344,27 +361,9 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.usersData[this.editedIndex], this.editedItem)
-        const param = {
-          ...this.editedItem,
-          id: this.editedItemId
-        }
-        updateUserInfo(param).then((resp) => {
-          if (resp) {
-            this.$alert("User has been updated.")
-          }
-        })
+        Object.assign(this.desserts[this.editedIndex], this.editedItem)
       } else {
-        this.usersData.push(this.editedItem)
-        const param = {
-          ...this.editItem
-        }
-        createUser(param).then((res) => {
-          if (res.code === 200) {
-            alert('A user has been created successfully!')
-          }
-          window.location.reload()
-        })
+        this.desserts.push(this.editedItem)
       }
       this.close()
     },

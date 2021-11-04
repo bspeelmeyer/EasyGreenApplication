@@ -7,6 +7,13 @@
         :items-per-page="20"
         class="text-center text-uppercase"
       >
+        <template v-slot:item.health>
+          <v-icon
+            style="color: green"
+          >
+          {{ icons.mdiEmoticonHappy}}
+          </v-icon>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
             small
@@ -29,8 +36,8 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDataListByUserId } from "@/api/data";
-import { mdiDelete, mdiPencil} from '@mdi/js';
+import { deleteSelectedPlant, getDataListByUserId } from "@/api/data";
+import { mdiDelete, mdiPencil, mdiEmoticonHappy} from '@mdi/js';
 
 const headers = [
   {
@@ -47,6 +54,9 @@ const headers = [
   },
   {
     text: 'Air Temperature', value: 'temperature',
+  },
+   {
+    text: 'Health', value: 'health', sortable: false
   },
   {text: 'Actions', value: 'actions', sortable: false},
 ]
@@ -74,20 +84,23 @@ export default {
       icons: {
         mdiPencil,
         mdiDelete,
+        mdiEmoticonHappy,
       },
     }
   },
 
   methods: {
     deleteItem(item) {
-      console.log(item)
+      console.log(item.id)
       console.log(this.plantsData.indexOf(item))
-      if (!confirm("Are you sure to delete this plant?")) {
-        return
-      }
-      // TODO
-      // Delete specific plant that this user chose
-
+      this.$confirm('Are you sure you want to delete this plant?',
+        'Delete plant',{
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+      }).then(() => deleteSelectedPlant(item.id)).then(() => {
+        this.$alert("The plant has been deleted.")
+      })
     },
 
     editItem(item) {
