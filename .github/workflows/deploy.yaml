@@ -2,9 +2,9 @@ name: Deploy to production
 
 on:
   push:
-    branches: [container]
+    branches: [develop]
   pull_request: 
-    branches: [container]
+    branches: [develop]
 
 jobs:
   build:
@@ -29,7 +29,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: easygreenfrontend
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
