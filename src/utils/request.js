@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getToken } from './auth'
 
-export const BASE_URL = 'http://localhost:8088'
+export const BASE_URL = 'http://13.211.62.206:8088'
 
 const headers = { 'content-type': 'application/json' }
 const INSTANCE = axios.create({
